@@ -13,7 +13,7 @@ https://cozo.me 사이트의 API 백엔드를 담당하는 https://api.cozo.me �
 
 ```shell
 $ cd docker
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
 ## production에서 실행시 필요한 환경 변수
