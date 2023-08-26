@@ -44,6 +44,7 @@ public class MlbParkCrawler extends Crawler {
 			throw new ContentUnreachableFoundException();
 		}
 
-		return Optional.ofNullable(document.selectFirst("#contentDetail")).map(Element::html);
+		return Optional.ofNullable(document.selectFirst("#contentDetail")).map(Element::html)
+			.map(html -> html.replaceAll("(?s)<div class=\"tool_cont\">.*?</div>", ""));
 	}
 }
