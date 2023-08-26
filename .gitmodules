@@ -1,0 +1,3 @@
+[submodule "webs"]
+	path = webs
+	url = https://github.com/crizin/webs.git

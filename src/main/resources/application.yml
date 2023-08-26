@@ -1,0 +1,92 @@
+spring:
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:mysql://localhost/cozo
+    username: cozo-user
+    password: cozo-password
+  cache:
+    type: redis
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
+  elasticsearch:
+    uris: http://localhost:9200
+
+server:
+  forward-headers-strategy: native
+  error:
+    whitelabel:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.99
+
+logging:
+  level:
+    org.apache.hc.client5.http.protocol: off
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: off
+    org.springframework.integration.handler.LoggingHandler: off
+
+cozo:
+  serviceHost: https://cozo.me
+  slack:
+    url: https://slack.com
+    token: ${SLACK_TOKEN:}
+    username: monitor
+    channel: "#general"
+  recaptcha:
+    url: https://www.google.com
+    secret: ${RECAPTCHA_SECRET:}
+  operatorAddresses: 172.18.0.1,127.0.0.1,0:0:0:0:0:0:0:1
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: default
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    me.cozo: debug
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: production
+  data:
+    redis:
+      host: redis
+  datasource:
+    url: jdbc:mysql://mysql/cozo
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  elasticsearch:
+    uris: http://elasticsearch:9200
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

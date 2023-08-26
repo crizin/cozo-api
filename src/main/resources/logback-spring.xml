@@ -1,0 +1,147 @@
+<configuration>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>[%highlight(%-5level)] %d{HH:mm:ss.SSS} [%thread] %cyan(%logger{36}) - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<springProfile name="production">
+		<appender name="integration-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/integration.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/integration-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="integration" level="info" additivity="false">
+			<appender-ref ref="integration-appender"/>
+		</logger>
+
+		<appender name="crawling-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/crawler.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/crawler-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="crawling" level="info" additivity="false">
+			<appender-ref ref="crawling-appender"/>
+		</logger>
+
+		<appender name="link-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/link.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/link-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="link" level="info" additivity="false">
+			<appender-ref ref="link-appender"/>
+		</logger>
+
+		<appender name="freshness-check-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/freshness-check.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/freshness-check-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="freshness-check" level="info" additivity="false">
+			<appender-ref ref="freshness-check-appender"/>
+		</logger>
+
+		<appender name="tag-trend-builder-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/tag-trend-builder.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/tag-trend-builder-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="tag-trend-builder" level="info" additivity="false">
+			<appender-ref ref="tag-trend-builder-appender"/>
+		</logger>
+
+		<appender name="warm-up-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/warm-up.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/warm-up-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="warm-up" level="info" additivity="false">
+			<appender-ref ref="warm-up-appender"/>
+		</logger>
+
+		<appender name="retry-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/retry.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/retry-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="retry" level="info" additivity="false">
+			<appender-ref ref="retry-appender"/>
+		</logger>
+	</springProfile>
+
+	<root level="info">
+		<appender-ref ref="console"/>
+	</root>
+</configuration>

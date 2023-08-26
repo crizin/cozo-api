@@ -1,0 +1,67 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Slack Notification
+        uses: act10ns/slack@v2
+        with:
+          status: starting
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+          ref: ${{ github.event.inputs.branch || github.ref }}
+
+      - name: Get Short Hash
+        id: short-sha
+        uses: benjlevesque/short-sha@v2.2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true
+
+      - name: Build Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: bootBuildImage --scan --imageName=${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ steps.short-sha.outputs.sha }}
+
+      - name: Push Image
+        run: |
+          docker image tag ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}:${{ steps.short-sha.outputs.sha }} ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}
+          docker push --all-tags ${{ steps.login-ecr.outputs.registry }}/${{ github.event.repository.name }}
+
+      - name: Slack Notification
+        uses: act10ns/slack@v2
+        if: always()
+        with:
+          status: ${{ job.status }}

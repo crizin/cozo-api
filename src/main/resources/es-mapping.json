@@ -1,0 +1,28 @@
+{
+	"dynamic": "strict",
+	"properties": {
+		"_class": {
+			"type": "keyword",
+			"index": false,
+			"doc_values": false
+		},
+		"id": {
+			"type": "long"
+		},
+		"boardId": {
+			"type": "long"
+		},
+		"title": {
+			"type": "text",
+			"analyzer": "korean_analyzer"
+		},
+		"content": {
+			"type": "text",
+			"analyzer": "korean_analyzer"
+		},
+		"createdAt": {
+			"type": "date",
+			"format": "date_hour_minute_second"
+		}
+	}
+}

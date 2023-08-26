@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  mysql:
+    container_name: cozo-mysql
+    image: mysql:8.1.0
+    environment:
+      MYSQL_DATABASE: cozo
+      MYSQL_USER: cozo-user
+      MYSQL_PASSWORD: cozo-password
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+
+  redis:
+    container_name: cozo-redis
+    image: redis:7.0.12
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+
+  elasticsearch:
+    container_name: cozo-elasticsearch
+    build: ./elasticsearch
+    ports:
+      - "9200:9200"
+    expose:
+      - "9200"
+
+  cerebro:
+    container_name: cozo-cerebro
+    environment:
+      ELASTICSEARCH_HOST: http://cozo-elasticsearch:9200
+    image: lmenezes/cerebro:0.9.4
+    ports:
+      - "9000:9000"
+    expose:
+      - "9000"
