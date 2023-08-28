@@ -38,6 +38,7 @@ public class YgosuCrawler extends Crawler {
 
 	@Override
 	protected Optional<String> getContentElements(Document document) {
-		return Optional.ofNullable(document.selectFirst("div.container")).map(Element::html);
+		return Optional.ofNullable(document.selectFirst("div.container")).map(Element::html)
+			.map(html -> html.replaceAll("(?s)<div class=\"filebox\">.*?</div>", ""));
 	}
 }
