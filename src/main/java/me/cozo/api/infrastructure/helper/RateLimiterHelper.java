@@ -12,9 +12,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @SuppressWarnings("UnstableApiUsage")
 public class RateLimiterHelper {
 
-	private static final Map<String, RateLimiter> rateLimiters = new ConcurrentHashMap<>();
+	private final Map<String, RateLimiter> rateLimiters = new ConcurrentHashMap<>();
 
-	public static void acquire(String host) {
+	public void acquire(String host) {
 		var slept = rateLimiters.computeIfAbsent(host, key -> RateLimiter.create(1)).acquire();
 		if (slept > 0) {
 			log.trace("RateLimiter slept [host={}, seconds={}]", host, slept);
