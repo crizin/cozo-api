@@ -6,6 +6,7 @@ import me.cozo.api.domain.dto.TagTrendDto;
 import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.TagTrendRepository;
+import me.cozo.api.infrastructure.helper.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CachePut;
@@ -57,7 +58,7 @@ public class TagQuery {
 				candidateArticles = articleRepository.findAllByTagsContainsOrderByCreatedAtDesc(trend.getTag(), PageRequest.ofSize(ARTICLE_SIZE));
 			} else {
 				candidateArticles = articleRepository.findAllByTagsContainsAndCreatedAtBetweenOrderByClicksDescCreatedAtDesc(
-					trend.getTag(), date.atStartOfDay(), date.plusDays(1).atStartOfDay(), PageRequest.ofSize(ARTICLE_SIZE)
+					trend.getTag(), date.atStartOfDay(), DateUtils.getEndOfDay(date), PageRequest.ofSize(ARTICLE_SIZE)
 				);
 			}
 

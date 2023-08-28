@@ -10,6 +10,7 @@ import me.cozo.api.domain.model.TagTrend;
 import me.cozo.api.domain.model.TagTrendId;
 import me.cozo.api.domain.repository.TagRepository;
 import me.cozo.api.domain.repository.TagTrendRepository;
+import me.cozo.api.infrastructure.helper.DateUtils;
 import me.cozo.api.mapper.TagQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class BuildTagTrendCommandHandler {
 		LOGGER.info("{} - Start build tag trends", target);
 
 		var lowerDateTime = target.minusDays(4).atStartOfDay();
-		var upperDateTime = target.minusDays(2).atTime(23, 59, 59, 999_999_999);
+		var upperDateTime = DateUtils.getEndOfDay(target.minusDays(2));
 		var prevCountByTags = tagRepository.countByTags(lowerDateTime, upperDateTime, 1000);
 
 		var prevRanks = IntStream.range(1, prevCountByTags.size() + 1)
@@ -63,7 +64,7 @@ public class BuildTagTrendCommandHandler {
 			upperDateTime = LocalDateTime.now();
 		} else {
 			lowerDateTime = target.atStartOfDay();
-			upperDateTime = target.atTime(23, 59, 59, 999_999_999);
+			upperDateTime = DateUtils.getEndOfDay(target);
 		}
 
 		var todayCountByTags = tagRepository.countByTags(lowerDateTime, upperDateTime, 1000).stream()

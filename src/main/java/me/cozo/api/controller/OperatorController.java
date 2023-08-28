@@ -15,6 +15,7 @@ import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.BoardRepository;
 import me.cozo.api.infrastructure.client.SearchClient;
 import me.cozo.api.infrastructure.exception.http.NotFoundException;
+import me.cozo.api.infrastructure.helper.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -106,7 +107,7 @@ public class OperatorController {
 		) {
 			var pageSize = 100;
 			var lowerDate = date.atStartOfDay();
-			var upperDate = date.atTime(23, 59, 59, 999_999_999);
+			var upperDate = DateUtils.getEndOfDay(date);
 
 			for (var page = 0; ; page++) {
 				var articles = articleRepository.findAllByCreatedAtBetween(lowerDate, upperDate, PageRequest.of(page, pageSize));

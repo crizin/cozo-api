@@ -90,6 +90,10 @@ public class DateUtils {
 			.orElse(null);
 	}
 
+	public LocalDateTime getEndOfDay(LocalDate date) {
+		return date.atTime(23, 59, 59, 999_999_999);
+	}
+
 	public Duration getElapsed(LocalDateTime time) {
 		return Duration.between(time, LocalDateTime.now());
 	}
