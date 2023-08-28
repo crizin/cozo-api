@@ -1,5 +1,7 @@
 package me.cozo.api.application.handler;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Metrics;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.application.command.FetchArticleCommand;
 import me.cozo.api.application.crawler.ContentNotFoundException;
@@ -20,6 +22,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,6 +37,7 @@ public class FetchArticleCommandHandler {
 	private final Map<Class<? extends Crawler>, Crawler> crawlers;
 	private final ArticleRepository articleRepository;
 	private final BoardRepository boardRepository;
+	private final Map<String, Counter> counterMetrics = new ConcurrentHashMap<>();
 
 	public FetchArticleCommandHandler(
 		ApplicationContext applicationContext, ApplicationEventPublisher eventPublisher, ArticleRepository articleRepository, BoardRepository boardRepository
@@ -73,6 +77,13 @@ public class FetchArticleCommandHandler {
 
 		if (newArticle || BooleanUtils.isTrue(updated.get())) {
 			eventPublisher.publishEvent(new ArticleUpdatedEvent(article.getId(), true));
+
+			this.counterMetrics.computeIfAbsent(
+				article.getBoard().getSite().getKey(),
+				key -> Counter.builder("article_collected_count")
+					.tag("site", key)
+					.register(Metrics.globalRegistry)
+			).increment();
 		}
 	}
 
