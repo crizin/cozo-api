@@ -52,7 +52,7 @@ public record LinkDto(
 	@JsonProperty("thumbnailUrl")
 	public String thumbnailUrl() {
 		if (StringUtils.startsWith(originalThumbnailUrl, "http://") || StringUtils.endsWith(originalThumbnailUrl, ".gif")) {
-			return "https://images.weserv.nl/?w=300&url=%s".formatted(URLEncoder.encode(originalThumbnailUrl.substring(7), StandardCharsets.UTF_8));
+			return "https://images.weserv.nl/?w=300&url=%s".formatted(URLEncoder.encode(originalThumbnailUrl, StandardCharsets.UTF_8));
 		}
 
 		return originalThumbnailUrl;
