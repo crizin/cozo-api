@@ -13,7 +13,7 @@ public record LinkDto(
 	String url,
 	String title,
 	String description,
-	String originalThumbnailUrl,
+	String thumbnailUrl,
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	List<ArticleDto> articles
 )
