@@ -1,15 +1,10 @@
 package me.cozo.api.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.model.Link;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public record LinkDto(
@@ -18,7 +13,6 @@ public record LinkDto(
 	String url,
 	String title,
 	String description,
-	@JsonIgnore
 	String originalThumbnailUrl,
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	List<ArticleDto> articles
@@ -47,14 +41,5 @@ public record LinkDto(
 			link.getThumbnailUrl(),
 			articles.stream().map(ArticleDto::of).toList()
 		);
-	}
-
-	@JsonProperty("thumbnailUrl")
-	public String thumbnailUrl() {
-		if (StringUtils.startsWith(originalThumbnailUrl, "http://") || StringUtils.endsWith(originalThumbnailUrl, ".gif")) {
-			return "https://wsrv.nl/?w=300&url=%s".formatted(URLEncoder.encode(originalThumbnailUrl, StandardCharsets.UTF_8));
-		}
-
-		return originalThumbnailUrl;
 	}
 }
