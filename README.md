@@ -26,11 +26,8 @@ $ docker compose up -d
 
 ## GitHub Action
 
-- `.github/workflows/build.yml`: 프로젝트 빌드 후 Amazon ECR에 Docker 이미지를 푸시
+- `.github/workflows/build.yml`: 프로젝트 빌드 후 GitHub Container Registry에 Docker 이미지를 푸시
     - 필요한 Secrets
-        - `AWS_REGION`: 예) ap-northeast-2
-        - `AWS_ACCESS_KEY_ID`: 예) ABCDEFGHIJKLMNOPQRST
-        - `AWS_SECRET_ACCESS_KEY`: 예) abcdefghijklmnopqrstuvwxyz0123456789ABCD
         - `SLACK_WEBHOOK_URL`: https://hooks.slack.com/services/ABCDEFGHI/JKLMNOPQRST/abcdefghijklmnOPQRSTU012
 - `.github/workflows/sonarcloud.yml`: SonarCloud에 정적 분석 결과 리포팅
     - 필요한 Secrets
