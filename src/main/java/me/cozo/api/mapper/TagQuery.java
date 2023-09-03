@@ -30,13 +30,13 @@ public class TagQuery {
 	private final ArticleRepository articleRepository;
 	private final TagTrendRepository tagTrendRepository;
 
-	@Cacheable(cacheNames = "tags", cacheManager = "oneWeekCacheManager", key = "{#date.year, #date.monthValue, #date.dayOfMonth}")
+	@Cacheable(cacheNames = "tags", cacheManager = "oneDayCacheManager", key = "{#date.year, #date.monthValue, #date.dayOfMonth}")
 	public PageDto<List<TagTrendDto>, LocalDate> getTagTrends(LocalDate date) {
 		return getTagTrendsInternal(date);
 	}
 
 	@SuppressWarnings("UnusedReturnValue")
-	@CachePut(cacheNames = "tags", cacheManager = "oneWeekCacheManager", key = "{#date.year, #date.monthValue, #date.dayOfMonth}")
+	@CachePut(cacheNames = "tags", cacheManager = "oneDayCacheManager", key = "{#date.year, #date.monthValue, #date.dayOfMonth}")
 	public PageDto<List<TagTrendDto>, LocalDate> refreshTagTrends(LocalDate date) {
 		LOGGER.info("{} - Refresh tags", date);
 		return getTagTrendsInternal(date);

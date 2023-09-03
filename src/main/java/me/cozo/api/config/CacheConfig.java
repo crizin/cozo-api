@@ -25,8 +25,8 @@ public class CacheConfig {
 	}
 
 	@Bean
-	public CacheManager oneWeekCacheManager(RedisConnectionFactory connectionFactory) {
-		return getCacheManager(connectionFactory, Duration.ofDays(7));
+	public CacheManager oneDayCacheManager(RedisConnectionFactory connectionFactory) {
+		return getCacheManager(connectionFactory, Duration.ofDays(1));
 	}
 
 	private CacheManager getCacheManager(RedisConnectionFactory connectionFactory, Duration duration) {
