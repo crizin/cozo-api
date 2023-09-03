@@ -110,8 +110,8 @@ public class LinkClient {
 	}
 
 	public String resolveUrl(String baseUrl, String originalUrl) {
-		if (StringUtils.isBlank(originalUrl)) {
-			return originalUrl;
+		if (StringUtils.isBlank(originalUrl) || StringUtils.startsWithAny(originalUrl, "#", "data:")) {
+			return null;
 		}
 
 		URL base;
