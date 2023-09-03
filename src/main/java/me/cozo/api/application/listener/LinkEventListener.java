@@ -176,7 +176,7 @@ public class LinkEventListener {
 			throw new HtmlParsingException("Both title and thumbnail is empty");
 		}
 
-		Optional.ofNullable(getFaviconUrl(document))
+		Optional.ofNullable(getFaviconUrl(link.getUrl(), document))
 			.map(url -> reviseUrl(link.getUrl(), url))
 			.ifPresent(link::updateFaviconUrl);
 
@@ -268,7 +268,7 @@ public class LinkEventListener {
 			.orElse(null);
 	}
 
-	private String getFaviconUrl(Document document) {
+	private String getFaviconUrl(String url, Document document) {
 		return Stream.of("icon", "shortcut icon", "apple-touch-icon")
 			.map("link[rel='%s']"::formatted)
 			.map(document::selectFirst)
@@ -276,6 +276,14 @@ public class LinkEventListener {
 			.map(element -> element.attr("href"))
 			.filter(StringUtils::isNotBlank)
 			.findFirst()
+			.or(() -> {
+				try {
+					var response = webs.get(getBaseUrl(url) + "/favicon.ico").fetch();
+					return Optional.of(response.getFinalLocation());
+				} catch (Exception e) {
+					return Optional.empty();
+				}
+			})
 			.orElse(null);
 	}
 }
