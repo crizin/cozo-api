@@ -60,6 +60,9 @@ public class Link implements Serializable {
 	private String description;
 
 	@Column(length = 1023)
+	private String faviconUrl;
+
+	@Column(length = 1023)
 	private String thumbnailUrl;
 
 	@Column(nullable = false)
@@ -67,12 +70,13 @@ public class Link implements Serializable {
 
 	@Builder(toBuilder = true)
 	@SuppressWarnings("unused")
-	private Link(Type type, String host, String url, String title, String description, String thumbnailUrl, LocalDateTime lastUsedAt) {
+	private Link(Type type, String host, String url, String title, String description, String faviconUrl, String thumbnailUrl, LocalDateTime lastUsedAt) {
 		this.type = type;
 		this.host = host;
 		this.url = url;
 		this.title = title;
 		this.description = description;
+		this.faviconUrl = faviconUrl;
 		this.thumbnailUrl = thumbnailUrl;
 		this.lastUsedAt = lastUsedAt;
 	}
@@ -88,6 +92,10 @@ public class Link implements Serializable {
 
 	public void updateDescription(String description) {
 		this.description = description;
+	}
+
+	public void updateFaviconUrl(String faviconUrl) {
+		this.faviconUrl = faviconUrl;
 	}
 
 	public void updateThumbnailUrl(String thumbnailUrl) {

@@ -13,6 +13,7 @@ public record LinkDto(
 	String url,
 	String title,
 	String description,
+	String faviconUrl,
 	String thumbnailUrl,
 	@JsonInclude(JsonInclude.Include.NON_NULL)
 	List<ArticleDto> articles
@@ -26,6 +27,7 @@ public record LinkDto(
 			link.getUrl(),
 			link.getTitle(),
 			link.getDescription(),
+			link.getFaviconUrl(),
 			link.getThumbnailUrl(),
 			null
 		);
@@ -38,6 +40,7 @@ public record LinkDto(
 			link.getUrl(),
 			link.getTitle(),
 			link.getDescription(),
+			link.getFaviconUrl(),
 			link.getThumbnailUrl(),
 			articles.stream().map(ArticleDto::of).toList()
 		);

@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -175,6 +176,10 @@ public class LinkEventListener {
 			throw new HtmlParsingException("Both title and thumbnail is empty");
 		}
 
+		Optional.ofNullable(getFaviconUrl(document))
+			.map(url -> reviseUrl(link.getUrl(), url))
+			.ifPresent(link::updateFaviconUrl);
+
 		Optional.ofNullable(getMeta(document, "og:url", 768, false))
 			.map(url -> reviseUrl(link.getUrl(), url))
 			.ifPresent(link::updateUrl);
@@ -260,6 +265,17 @@ public class LinkEventListener {
 			.map(TextUtils::compactWhitespace)
 			.map(content -> unescape ? StringEscapeUtils.unescapeHtml4(content) : content)
 			.map(content -> StringUtils.abbreviate(content, length))
+			.orElse(null);
+	}
+
+	private String getFaviconUrl(Document document) {
+		return Stream.of("icon", "shortcut icon", "apple-touch-icon")
+			.map("link[rel='%s']"::formatted)
+			.map(document::selectFirst)
+			.filter(Objects::nonNull)
+			.map(element -> element.attr("href"))
+			.filter(StringUtils::isNotBlank)
+			.findFirst()
 			.orElse(null);
 	}
 }
