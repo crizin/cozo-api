@@ -6,12 +6,15 @@ import me.cozo.api.domain.model.Board;
 import me.cozo.api.domain.repository.BoardRepository;
 import me.cozo.api.mapper.ArticleQuery;
 import me.cozo.api.mapper.LinkQuery;
+import me.cozo.api.mapper.TagQuery;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import java.time.LocalDate;
 
 @Slf4j
 @Component
@@ -20,8 +23,9 @@ public class WarmUpScheduler {
 
 	protected static final Logger LOGGER = LoggerFactory.getLogger("warm-up");
 
-	private final LinkQuery linkQuery;
 	private final ArticleQuery articleQuery;
+	private final LinkQuery linkQuery;
+	private final TagQuery tagQuery;
 	private final BoardRepository boardRepository;
 
 	@Scheduled(cron = "0 * * * * *")
@@ -32,6 +36,7 @@ public class WarmUpScheduler {
 		warmUpArticles();
 		boardRepository.findAllByActiveIsTrueOrderBySiteName().forEach(this::warmUpArticlesByBoard);
 		warmUpLinks();
+		warmUpKeywords();
 
 		LOGGER.info("Finish warming up");
 	}
@@ -96,6 +101,16 @@ public class WarmUpScheduler {
 		for (var page = 1; page <= 10; page++) {
 			LOGGER.info("Warming up links [page={}]", page);
 			linkQuery.getLinks(page);
+		}
+	}
+
+	private void warmUpKeywords() {
+		for (LocalDate date = LocalDate.now(), lower = LocalDate.now().minusDays(7);
+			 !date.isBefore(lower);
+			 date = date.minusDays(1)
+		) {
+			LOGGER.info("Warming tag trend [date={}]", date);
+			tagQuery.getTagTrends(date);
 		}
 	}
 }
