@@ -61,7 +61,7 @@ public class LinkEventListener {
 		var document = Jsoup.parse("<div>%s</div>".formatted(article.getContent()));
 
 		var links = linkClient.collectLinks(document).stream()
-			.map(url -> linkClient.reviseUrl(article.getPcUrl(), url))
+			.map(url -> linkClient.resolveUrl(article.getPcUrl(), url))
 			.map(url -> {
 				try {
 					return LinkBuilder.build(url);

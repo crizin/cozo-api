@@ -4,6 +4,7 @@ import io.micrometer.core.instrument.Metrics;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.application.crawler.CrawlerException;
 import me.cozo.api.application.crawler.HtmlParsingException;
+import me.cozo.api.application.crawler.InvalidLinkException;
 import me.cozo.api.domain.model.Link;
 import me.cozo.api.infrastructure.helper.RateLimiterHelper;
 import me.cozo.api.infrastructure.helper.TextUtils;
@@ -16,7 +17,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Objects;
@@ -58,12 +61,12 @@ public class LinkClient {
 				throw new HtmlParsingException("Content-Type is " + response.getHeader("Content-Type").orElse(null));
 			});
 
-		link.updateUrl(reviseUrl(link.getUrl(), response.getFinalLocation()));
+		link.updateUrl(resolveUrl(link.getUrl(), response.getFinalLocation()));
 		link.updateTitle(getMeta(document, "og:title", 1023, true));
 		link.updateDescription(getMeta(document, "og:description", 1023, true));
 
 		Optional.ofNullable(getMeta(document, "og:image", 1023, false))
-			.map(thumbnailUrl -> reviseUrl(link.getUrl(), thumbnailUrl))
+			.map(thumbnailUrl -> resolveUrl(link.getUrl(), thumbnailUrl))
 			.ifPresent(link::updateThumbnailUrl);
 
 		if (StringUtils.isBlank(link.getTitle())) {
@@ -79,11 +82,11 @@ public class LinkClient {
 		}
 
 		Optional.ofNullable(getFaviconUrl(link.getUrl(), document))
-			.map(url -> reviseUrl(link.getUrl(), url))
+			.map(url -> resolveUrl(link.getUrl(), url))
 			.ifPresent(link::updateFaviconUrl);
 
 		Optional.ofNullable(getMeta(document, "og:url", 768, false))
-			.map(url -> reviseUrl(link.getUrl(), url))
+			.map(url -> resolveUrl(link.getUrl(), url))
 			.ifPresent(link::updateUrl);
 	}
 
@@ -106,25 +109,27 @@ public class LinkClient {
 		return links;
 	}
 
-	public String reviseUrl(String baseUrl, String originalUrl) {
+	public String resolveUrl(String baseUrl, String originalUrl) {
 		if (StringUtils.isBlank(originalUrl)) {
 			return originalUrl;
 		}
 
-		String url = originalUrl.trim();
+		URL base;
+		URL resolved;
 
-		if (url.startsWith("//")) {
-			url = "https:" + url;
-		} else if (url.startsWith("/")) {
-			url = getBaseUrl(baseUrl) + url;
-		} else {
-			Matcher matcher = PATTERN_URL.matcher(url);
-			if (!matcher.find() && !url.contains("//")) {
-				url = "https://" + url;
-			}
+		try {
+			base = new URL(baseUrl);
+		} catch (MalformedURLException e) {
+			throw new InvalidLinkException("Invalid URL pattern [url=%s]".formatted(baseUrl));
 		}
 
-		return url;
+		try {
+			resolved = new URL(base, originalUrl.trim());
+		} catch (MalformedURLException e) {
+			throw new InvalidLinkException("Invalid URL pattern [url=%s]".formatted(baseUrl));
+		}
+
+		return resolved.toExternalForm();
 	}
 
 	private String getMeta(Document document, String property, int length, boolean unescape) {
