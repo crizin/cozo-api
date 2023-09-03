@@ -120,13 +120,13 @@ public class LinkClient {
 		try {
 			base = new URL(baseUrl);
 		} catch (MalformedURLException e) {
-			throw new InvalidLinkException("Invalid URL pattern [url=%s]".formatted(baseUrl));
+			throw new InvalidLinkException("Invalid URL pattern [baseUrl=%s]".formatted(baseUrl));
 		}
 
 		try {
 			resolved = new URL(base, originalUrl.trim());
 		} catch (MalformedURLException e) {
-			throw new InvalidLinkException("Invalid URL pattern [url=%s]".formatted(baseUrl));
+			throw new InvalidLinkException("Invalid URL pattern [baseUrl=%s, originalUrl=%s]".formatted(baseUrl, originalUrl));
 		}
 
 		return resolved.toExternalForm();
