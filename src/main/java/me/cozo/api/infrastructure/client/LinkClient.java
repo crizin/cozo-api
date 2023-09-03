@@ -148,6 +148,7 @@ public class LinkClient {
 			.filter(Objects::nonNull)
 			.map(element -> element.attr("href"))
 			.filter(StringUtils::isNotBlank)
+			.filter(href -> !StringUtils.startsWith(href, "data:"))
 			.findFirst()
 			.or(() -> {
 				try {
