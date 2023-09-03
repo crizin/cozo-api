@@ -1,41 +1,26 @@
 package me.cozo.api.application.listener;
 
-import io.micrometer.core.instrument.Metrics;
 import lombok.RequiredArgsConstructor;
-import me.cozo.api.application.crawler.CrawlerException;
-import me.cozo.api.application.crawler.HtmlParsingException;
 import me.cozo.api.domain.event.ArticleUpdatedEvent;
 import me.cozo.api.domain.helper.LinkBuilder;
 import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.model.Link;
 import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.LinkRepository;
-import me.cozo.api.infrastructure.helper.RateLimiterHelper;
-import me.cozo.api.infrastructure.helper.TextUtils;
-import net.crizin.webs.Browser;
-import net.crizin.webs.Webs;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
+import me.cozo.api.infrastructure.client.LinkClient;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.net.URISyntaxException;
-import java.time.Duration;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +28,6 @@ public class LinkEventListener {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger("link");
 
-	private static final Pattern PATTERN_URL = Pattern.compile("https?://[^/]+/[^\\s()<>\\[\\]'\"]+");
-	private static final Pattern PATTERN_BASE_URL = Pattern.compile("^(https?://[^/]+)");
 	private static final Pattern[] PATTERNS_IGNORE = new Pattern[] {
 		Pattern.compile("^https?://drive\\.google\\.com/", Pattern.CASE_INSENSITIVE),
 		Pattern.compile("^https?://[\\w-]+\\.googledrive\\.com/", Pattern.CASE_INSENSITIVE),
@@ -63,22 +46,9 @@ public class LinkEventListener {
 		Pattern.compile("popall\\.net|link\\.naver\\.com|nid\\.naver\\.com|www\\.w3\\.org|notfound\\.html|email-protection|/ads/|ico_noimg_thumb", Pattern.CASE_INSENSITIVE),
 	};
 
+	private final LinkClient linkClient;
 	private final ArticleRepository articleRepository;
 	private final LinkRepository linkRepository;
-	private final Webs webs = Webs.builder()
-		.disableContentCompression()
-		.setConnectionTimeout(Duration.ofSeconds(5))
-		.setReadTimeout(Duration.ofSeconds(30))
-		.simulateBrowser(Browser.CHROME)
-		.registerMetrics(Metrics.globalRegistry)
-		.registerPreHook((context, request) -> {
-			try {
-				RateLimiterHelper.acquire(request.getUri().getHost());
-			} catch (URISyntaxException e) {
-				throw new CrawlerException(e);
-			}
-		})
-		.build();
 
 	@Async("linkExecutor")
 	@EventListener
@@ -90,8 +60,8 @@ public class LinkEventListener {
 		var article = articleRepository.findById(event.articleId()).orElseThrow();
 		var document = Jsoup.parse("<div>%s</div>".formatted(article.getContent()));
 
-		var links = collectLinks(document).stream()
-			.map(url -> reviseUrl(article.getPcUrl(), url))
+		var links = linkClient.collectLinks(document).stream()
+			.map(url -> linkClient.reviseUrl(article.getPcUrl(), url))
 			.map(url -> {
 				try {
 					return LinkBuilder.build(url);
@@ -127,64 +97,6 @@ public class LinkEventListener {
 		articleRepository.save(article);
 	}
 
-	private Set<String> collectLinks(Document document) {
-		var links = new HashSet<String>();
-
-		for (Element el : document.select("a")) {
-			links.add(el.attr("href"));
-		}
-
-		for (Element el : document.select("iframe,img")) {
-			links.add(el.attr("src"));
-		}
-
-		var matcher = PATTERN_URL.matcher(document.text());
-		while (matcher.find()) {
-			links.add(matcher.group());
-		}
-
-		return links;
-	}
-
-	private void fetchLink(Link link) {
-		var response = webs.get(link.getUrl()).fetch();
-		var document = Jsoup.parse(response.asString());
-
-		response.getHeader("Content-Type")
-			.filter(header -> header.contains("text/html"))
-			.ifPresentOrElse(header -> {}, () -> {
-				throw new HtmlParsingException("Content-Type is " + response.getHeader("Content-Type").orElse(null));
-			});
-
-		link.updateUrl(reviseUrl(link.getUrl(), response.getFinalLocation()));
-		link.updateTitle(getMeta(document, "og:title", 1023, true));
-		link.updateDescription(getMeta(document, "og:description", 1023, true));
-
-		Optional.ofNullable(getMeta(document, "og:image", 1023, false))
-			.map(thumbnailUrl -> reviseUrl(link.getUrl(), thumbnailUrl))
-			.ifPresent(link::updateThumbnailUrl);
-
-		if (StringUtils.isBlank(link.getTitle())) {
-			link.updateTitle(getMeta(document, "og:site_name", 1023, true));
-		}
-
-		if (StringUtils.isBlank(link.getTitle())) {
-			link.updateTitle(document.title());
-		}
-
-		if (StringUtils.isAllBlank(link.getTitle(), link.getThumbnailUrl())) {
-			throw new HtmlParsingException("Both title and thumbnail is empty");
-		}
-
-		Optional.ofNullable(getFaviconUrl(link.getUrl(), document))
-			.map(url -> reviseUrl(link.getUrl(), url))
-			.ifPresent(link::updateFaviconUrl);
-
-		Optional.ofNullable(getMeta(document, "og:url", 768, false))
-			.map(url -> reviseUrl(link.getUrl(), url))
-			.ifPresent(link::updateUrl);
-	}
-
 	private Set<Link> saveLinks(Article article, Set<Link> links) {
 		Set<Link> updatedLinks;
 
@@ -193,7 +105,7 @@ public class LinkEventListener {
 				var originalUrl = link.getUrl();
 
 				try {
-					fetchLink(link);
+					linkClient.fetchLink(link);
 				} catch (Exception e) {
 					LOGGER.error("Fetch Link - Failed [type={}, url={}, e={}]", link.getType(), link.getUrl(), e.getMessage());
 					return null;
@@ -224,66 +136,9 @@ public class LinkEventListener {
 			.collect(Collectors.toSet());
 	}
 
-	private String reviseUrl(String baseUrl, String originalUrl) {
-		if (StringUtils.isBlank(originalUrl)) {
-			return originalUrl;
-		}
-
-		String url = originalUrl.trim();
-
-		if (url.startsWith("//")) {
-			url = "https:" + url;
-		} else if (url.startsWith("/")) {
-			url = getBaseUrl(baseUrl) + url;
-		} else {
-			Matcher matcher = PATTERN_URL.matcher(url);
-			if (!matcher.find() && !url.contains("//")) {
-				url = "https://" + url;
-			}
-		}
-
-		return url;
-	}
-
 	private boolean filterOutIgnored(String url) {
 		return Arrays.stream(PATTERNS_IGNORE)
 			.map(pattern -> pattern.matcher(url))
 			.noneMatch(Matcher::find);
-	}
-
-	private String getBaseUrl(String url) {
-		return Optional.ofNullable(url)
-			.map(PATTERN_BASE_URL::matcher)
-			.filter(Matcher::find)
-			.map(matcher -> matcher.group(1))
-			.orElse(StringUtils.EMPTY);
-	}
-
-	private String getMeta(Document document, String property, int length, boolean unescape) {
-		return Optional.ofNullable(document.selectFirst("meta[property=%s]".formatted(property)))
-			.map(meta -> meta.attr("content"))
-			.map(TextUtils::compactWhitespace)
-			.map(content -> unescape ? StringEscapeUtils.unescapeHtml4(content) : content)
-			.map(content -> StringUtils.abbreviate(content, length))
-			.orElse(null);
-	}
-
-	private String getFaviconUrl(String url, Document document) {
-		return Stream.of("icon", "shortcut icon", "apple-touch-icon")
-			.map("link[rel='%s']"::formatted)
-			.map(document::selectFirst)
-			.filter(Objects::nonNull)
-			.map(element -> element.attr("href"))
-			.filter(StringUtils::isNotBlank)
-			.findFirst()
-			.or(() -> {
-				try {
-					var response = webs.get(getBaseUrl(url) + "/favicon.ico").fetch();
-					return Optional.of(response.getFinalLocation());
-				} catch (Exception e) {
-					return Optional.empty();
-				}
-			})
-			.orElse(null);
 	}
 }

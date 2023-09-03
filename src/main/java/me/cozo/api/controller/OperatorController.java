@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.application.command.BuildTagTrendCommand;
 import me.cozo.api.application.command.DeleteArticleCommand;
+import me.cozo.api.application.command.RefreshLinkCommand;
 import me.cozo.api.application.scheduler.CrawlingScheduler;
 import me.cozo.api.application.scheduler.FreshnessCheckScheduler;
 import me.cozo.api.application.scheduler.WarmUpScheduler;
@@ -156,6 +157,14 @@ public class OperatorController {
 	public ResponseDto<Void> warmUp(HttpServletRequest request) {
 		requirePrivateRequest(request);
 		warmUpScheduler.run();
+		return ResponseDto.success();
+	}
+
+	@PostMapping("/link/refresh/{id}")
+	@Operation(summary = "Link 재수집")
+	public ResponseDto<Void> linkRefresh(HttpServletRequest request, @PathVariable Long id) {
+		requirePrivateRequest(request);
+		commandGateway.send(new RefreshLinkCommand(id));
 		return ResponseDto.success();
 	}
 
