@@ -36,9 +36,20 @@ public class WarmUpScheduler {
 		warmUpArticles();
 		boardRepository.findAllByActiveIsTrueOrderBySiteName().forEach(this::warmUpArticlesByBoard);
 		warmUpLinks();
-		warmUpKeywords();
 
 		LOGGER.info("Finish warming up");
+	}
+
+	@Scheduled(cron = "30 0/3 * * * *")
+	@SchedulerLock(name = "WarmUpScheduler.keywords")
+	public void warmUpKeywords() {
+		for (LocalDate date = LocalDate.now(), lower = LocalDate.now().minusDays(14);
+			 !date.isBefore(lower);
+			 date = date.minusDays(1)
+		) {
+			LOGGER.info("Warming tag trend [date={}]", date);
+			tagQuery.getTagTrends(date);
+		}
 	}
 
 	private void warmUpArticles() {
@@ -101,16 +112,6 @@ public class WarmUpScheduler {
 		for (var page = 1; page <= 10; page++) {
 			LOGGER.info("Warming up links [page={}]", page);
 			linkQuery.getLinks(page);
-		}
-	}
-
-	private void warmUpKeywords() {
-		for (LocalDate date = LocalDate.now(), lower = LocalDate.now().minusDays(7);
-			 !date.isBefore(lower);
-			 date = date.minusDays(1)
-		) {
-			LOGGER.info("Warming tag trend [date={}]", date);
-			tagQuery.getTagTrends(date);
 		}
 	}
 }
