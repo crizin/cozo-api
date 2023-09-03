@@ -47,6 +47,7 @@ dependencies {
     implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("org.apache.commons:commons-text:1.10.0")
     implementation("com.google.guava:guava:32.1.2-jre")
     implementation("org.reflections:reflections:0.10.2")
     implementation("org.jsoup:jsoup:1.16.1")

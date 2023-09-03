@@ -15,6 +15,7 @@ import me.cozo.api.infrastructure.helper.TextUtils;
 import net.crizin.webs.Browser;
 import net.crizin.webs.Webs;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -155,15 +156,15 @@ public class LinkEventListener {
 			});
 
 		link.updateUrl(reviseUrl(link.getUrl(), response.getFinalLocation()));
-		link.updateTitle(getMeta(document, "og:title", 1023));
-		link.updateDescription(getMeta(document, "og:description", 1023));
+		link.updateTitle(getMeta(document, "og:title", 1023, true));
+		link.updateDescription(getMeta(document, "og:description", 1023, true));
 
-		Optional.ofNullable(getMeta(document, "og:image", 1023))
+		Optional.ofNullable(getMeta(document, "og:image", 1023, false))
 			.map(thumbnailUrl -> reviseUrl(link.getUrl(), thumbnailUrl))
 			.ifPresent(link::updateThumbnailUrl);
 
 		if (StringUtils.isBlank(link.getTitle())) {
-			link.updateTitle(getMeta(document, "og:site_name", 1023));
+			link.updateTitle(getMeta(document, "og:site_name", 1023, true));
 		}
 
 		if (StringUtils.isBlank(link.getTitle())) {
@@ -174,7 +175,7 @@ public class LinkEventListener {
 			throw new HtmlParsingException("Both title and thumbnail is empty");
 		}
 
-		Optional.ofNullable(getMeta(document, "og:url", 768))
+		Optional.ofNullable(getMeta(document, "og:url", 768, false))
 			.map(url -> reviseUrl(link.getUrl(), url))
 			.ifPresent(link::updateUrl);
 	}
@@ -253,10 +254,11 @@ public class LinkEventListener {
 			.orElse(StringUtils.EMPTY);
 	}
 
-	private String getMeta(Document document, String property, int length) {
+	private String getMeta(Document document, String property, int length, boolean unescape) {
 		return Optional.ofNullable(document.selectFirst("meta[property=%s]".formatted(property)))
 			.map(meta -> meta.attr("content"))
 			.map(TextUtils::compactWhitespace)
+			.map(content -> unescape ? StringEscapeUtils.unescapeHtml4(content) : content)
 			.map(content -> StringUtils.abbreviate(content, length))
 			.orElse(null);
 	}
