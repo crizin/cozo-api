@@ -76,7 +76,7 @@ public class TextUtils {
 			if (host == null) {
 				throw new InvalidLinkException("Host must be not null [url=%s]".formatted(url));
 			}
-			return StringUtils.removeStart(host, "www.");
+			return StringUtils.removeStart(StringUtils.removeStart(host, "m."), "www.");
 		} catch (URISyntaxException e) {
 			throw new InvalidLinkException("Host must be not null [url=%s]".formatted(url), e);
 		}
