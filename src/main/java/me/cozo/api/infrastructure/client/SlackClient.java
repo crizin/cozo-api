@@ -1,42 +1,31 @@
 package me.cozo.api.infrastructure.client;
 
 import io.micrometer.common.util.StringUtils;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import net.crizin.webs.Webs;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.support.WebClientAdapter;
-import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Slf4j
 @Component
 public class SlackClient {
 
-	private final String token;
-	private final String username;
-	private final String channel;
-	private final SlackClientExchanger slackClientExchanger;
+	private final String url;
 
-	public SlackClient(
-		@Value("${cozo.slack.url}") String baseUrl, @Value("${cozo.slack.token}") String token, @Value("${cozo.slack.username}") String username,
-		@Value("${cozo.slack.channel}") String channel
-	) {
-		this.token = token;
-		this.username = username;
-		this.channel = channel;
-		this.slackClientExchanger = HttpServiceProxyFactory.builder(WebClientAdapter.forClient(WebClient.builder().baseUrl(baseUrl).build())).build().createClient(
-			SlackClientExchanger.class);
+	public SlackClient(@Value("${cozo.slack.url}") String url) {
+		this.url = url;
 	}
 
 	public boolean sendMessage(String message) {
-		if (StringUtils.isBlank(token)) {
+		if (StringUtils.isBlank(url)) {
 			log.debug("Skip Slack message send [message={}]", message);
 			return true;
 		}
 
-		return slackClientExchanger.postMessage(token, username, channel, message).ok();
-	}
-
-	record Response(boolean ok) {
+		try (Webs webs = Webs.createSimple()) {
+			var response = webs.post(url).jsonPayload(Map.of("text", message)).fetchAsString();
+			return response.equals("ok");
+		}
 	}
 }

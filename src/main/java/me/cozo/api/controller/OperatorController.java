@@ -48,10 +48,10 @@ public class OperatorController {
 	private final Set<String> operatorAddresses;
 
 	public OperatorController(
-		ApplicationEventPublisher eventPublisher, CommandGateway commandGateway, SearchClient searchClient, CrawlingScheduler crawlingScheduler,
-		FreshnessCheckScheduler freshnessCheckScheduler, WarmUpScheduler warmUpScheduler, ArticleRepository articleRepository, BoardRepository boardRepository,
-		@Value("${cozo.operatorAddresses}") String operatorAddresses
-	) {
+		ApplicationEventPublisher eventPublisher, CommandGateway commandGateway, SearchClient searchClient,
+		CrawlingScheduler crawlingScheduler, FreshnessCheckScheduler freshnessCheckScheduler, WarmUpScheduler warmUpScheduler,
+		ArticleRepository articleRepository, BoardRepository boardRepository, @Value("${cozo.operatorAddresses}") Set<String> operatorAddresses)
+	{
 		this.eventPublisher = eventPublisher;
 		this.commandGateway = commandGateway;
 		this.searchClient = searchClient;
@@ -60,7 +60,7 @@ public class OperatorController {
 		this.warmUpScheduler = warmUpScheduler;
 		this.articleRepository = articleRepository;
 		this.boardRepository = boardRepository;
-		this.operatorAddresses = Set.of(operatorAddresses.split(","));
+		this.operatorAddresses = operatorAddresses;
 	}
 
 	@PostMapping("/crawling")

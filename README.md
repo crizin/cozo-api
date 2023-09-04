@@ -21,7 +21,7 @@ $ docker compose up -d
 - `SPRING_PROFILES_ACTIVE`: production
 - `DB_USERNAME`: MySQL user
 - `DB_PASSWORD`: MySQL password
-- `SLACK_TOKEN`: Slack bot token
+- `SLACK_WEBHOOK_URL`: Slack webhook URL
 - `RECAPTCHA_SECRET`: Google reCAPTCHA secret
 
 ## GitHub Action
