@@ -1,5 +1,6 @@
 package me.cozo.api.application.scheduler;
 
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.domain.model.Board;
@@ -13,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import java.time.LocalDate;
 
 @Slf4j
 @Component
@@ -43,7 +42,19 @@ public class WarmUpScheduler {
 	@Scheduled(cron = "30 0/3 * * * *")
 	@SchedulerLock(name = "WarmUpScheduler.keywords")
 	public void warmUpKeywords() {
-		for (LocalDate date = LocalDate.now(), lower = LocalDate.now().minusDays(14);
+		for (LocalDate date = LocalDate.now(), lower = LocalDate.now().minusDays(7);
+			 !date.isBefore(lower);
+			 date = date.minusDays(1)
+		) {
+			LOGGER.info("Warming tag trend [date={}]", date);
+			tagQuery.getTagTrends(date);
+		}
+	}
+
+	@Scheduled(cron = "0 0 6 * * *")
+	@SchedulerLock(name = "WarmUpScheduler.keywords")
+	public void warmUpKeywordsOld() {
+		for (LocalDate date = LocalDate.now(), lower = LocalDate.now().minusDays(30);
 			 !date.isBefore(lower);
 			 date = date.minusDays(1)
 		) {
