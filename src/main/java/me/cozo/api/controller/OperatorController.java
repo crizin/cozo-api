@@ -50,7 +50,7 @@ public class OperatorController {
 	public OperatorController(
 		ApplicationEventPublisher eventPublisher, CommandGateway commandGateway, SearchClient searchClient,
 		CrawlingScheduler crawlingScheduler, FreshnessCheckScheduler freshnessCheckScheduler, WarmUpScheduler warmUpScheduler,
-		ArticleRepository articleRepository, BoardRepository boardRepository, @Value("${cozo.operatorAddresses}") Set<String> operatorAddresses)
+		ArticleRepository articleRepository, BoardRepository boardRepository, @Value("${cozo.operator-addresses}") Set<String> operatorAddresses)
 	{
 		this.eventPublisher = eventPublisher;
 		this.commandGateway = commandGateway;

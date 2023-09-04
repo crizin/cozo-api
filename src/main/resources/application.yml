@@ -44,13 +44,13 @@ logging:
     org.springframework.integration.handler.LoggingHandler: off
 
 cozo:
-  serviceHost: https://cozo.me
+  service-host: https://cozo.me
   slack:
     url: ${SLACK_WEBHOOK_URL:}
   recaptcha:
     url: https://www.google.com
     secret: ${RECAPTCHA_SECRET:}
-  operatorAddresses: 172.18.0.1, 127.0.0.1, 0:0:0:0:0:0:0:1
+  operator-addresses: 172.18.0.1, 127.0.0.1, 0:0:0:0:0:0:0:1
 
 ---
 

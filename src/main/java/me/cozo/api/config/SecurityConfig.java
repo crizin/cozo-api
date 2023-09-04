@@ -24,7 +24,7 @@ public class SecurityConfig {
 
 	private final String serviceHost;
 
-	public SecurityConfig(@Value("${cozo.serviceHost}") String serviceHost) {
+	public SecurityConfig(@Value("${cozo.service-host}") String serviceHost) {
 		this.serviceHost = serviceHost;
 	}
 
