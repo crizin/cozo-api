@@ -47,9 +47,9 @@ cozo:
   service-host: https://cozo.me
   slack:
     url: ${SLACK_WEBHOOK_URL:}
-  recaptcha:
-    url: https://www.google.com
-    secret: ${RECAPTCHA_SECRET:}
+  turnstile:
+    url: https://challenges.cloudflare.com
+    secret: ${TURNSTILE_SECRET:}
   operator-addresses: 172.18.0.1, 127.0.0.1, 0:0:0:0:0:0:0:1
 
 ---

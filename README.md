@@ -22,7 +22,7 @@ $ docker compose up -d
 - `DB_USERNAME`: MySQL user
 - `DB_PASSWORD`: MySQL password
 - `SLACK_WEBHOOK_URL`: Slack webhook URL
-- `RECAPTCHA_SECRET`: Google reCAPTCHA secret
+- `TURNSTILE_SECRET`: [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) secret
 
 ## GitHub Action
 

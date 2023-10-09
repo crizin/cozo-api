@@ -112,14 +112,8 @@ public class MainController {
 	public ResponseDto<String> sendMessage(HttpServletRequest request, @RequestParam @NotBlank String token, @RequestParam @NotBlank String message) {
 		var success = captchaClient.check(token, request.getRemoteAddr());
 
-		log.info("Captcha response [response={}]", success);
-
 		if (!success) {
 			return ResponseDto.error("올바르지 않은 요청입니다");
-		}
-
-		if (StringUtils.isBlank(message)) {
-			return ResponseDto.error("메시지를 입력해주세요");
 		}
 
 		if (slackClient.sendMessage(message)) {
