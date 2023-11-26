@@ -17,9 +17,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
-import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Objects;
@@ -114,22 +113,11 @@ public class LinkClient {
 			return null;
 		}
 
-		URL base;
-		URL resolved;
-
 		try {
-			base = new URL(baseUrl);
-		} catch (MalformedURLException e) {
-			throw new InvalidLinkException("Invalid URL pattern [baseUrl=%s]".formatted(baseUrl));
-		}
-
-		try {
-			resolved = new URL(base, originalUrl.trim());
-		} catch (MalformedURLException e) {
+			return new URI(baseUrl).resolve(originalUrl.trim()).toString();
+		} catch (URISyntaxException e) {
 			throw new InvalidLinkException("Invalid URL pattern [baseUrl=%s, originalUrl=%s]".formatted(baseUrl, originalUrl));
 		}
-
-		return resolved.toExternalForm();
 	}
 
 	private String getMeta(Document document, String property, int length, boolean unescape) {

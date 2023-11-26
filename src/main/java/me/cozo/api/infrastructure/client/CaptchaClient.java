@@ -20,7 +20,7 @@ public class CaptchaClient {
 
 	public CaptchaClient(@Value("${cozo.turnstile.url}") String baseUrl, @Value("${cozo.turnstile.secret}") String secret) {
 		this.secret = secret;
-		this.captchaClientExchanger = HttpServiceProxyFactory.builder(WebClientAdapter.forClient(WebClient.builder().baseUrl(baseUrl).build())).build()
+		this.captchaClientExchanger = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(WebClient.create(baseUrl))).build()
 			.createClient(CaptchaClientExchanger.class);
 	}
 

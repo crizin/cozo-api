@@ -46,7 +46,7 @@ public class SearchClient {
 			)
 			.build();
 
-		this.searchClientExchanger = HttpServiceProxyFactory.builder(WebClientAdapter.forClient(webClient)).build()
+		this.searchClientExchanger = HttpServiceProxyFactory.builderFor(WebClientAdapter.create(webClient)).build()
 			.createClient(SearchClientExchanger.class);
 	}
 
