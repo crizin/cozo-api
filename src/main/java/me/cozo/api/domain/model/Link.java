@@ -44,7 +44,7 @@ public class Link implements Serializable {
 	private Long id;
 
 	@Enumerated(EnumType.STRING)
-	@Column(nullable = false, length = 5)
+	@Column(nullable = false, length = 5, columnDefinition = "VARCHAR(5)")
 	private Type type;
 
 	@Column(nullable = false)
