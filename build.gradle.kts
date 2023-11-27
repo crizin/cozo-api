@@ -2,7 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.4"
-    id("org.sonarqube") version "4.2.1.3168"
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "me.cozo"
