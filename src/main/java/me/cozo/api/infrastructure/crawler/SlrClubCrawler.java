@@ -31,7 +31,7 @@ public class SlrClubCrawler extends Crawler {
 			log.error("SlrClub page crawling failed. [document={}]", document);
 		}
 
-		pages.add(0, String.valueOf(TextUtils.number(pages.get(0)) + 1));
+		pages.addFirst(String.valueOf(TextUtils.number(pages.getFirst()) + 1));
 
 		return pages.stream();
 	}

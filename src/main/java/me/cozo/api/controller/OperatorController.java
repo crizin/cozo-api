@@ -117,7 +117,7 @@ public class OperatorController {
 					break;
 				}
 
-				log.info("Request indexing [date={}, page={}, createdAt={}]", date, page, articles.get(0).getCreatedAt());
+				log.info("Request indexing [date={}, page={}, createdAt={}]", date, page, articles.getFirst().getCreatedAt());
 
 				articles.stream()
 					.filter(article -> StringUtils.isNotBlank(article.getContent()))

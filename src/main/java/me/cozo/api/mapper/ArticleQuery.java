@@ -31,8 +31,8 @@ public class ArticleQuery {
 			() -> articleRepository.findAllBy(PageRequest.of(0, PAGE_SIZE + 1, Direction.DESC, "id")),
 			() -> articleRepository.findAllByIdLessThan(nextCursor, PageRequest.of(0, PAGE_SIZE + 1, Direction.DESC, "id")),
 			() -> articleRepository.findAllByIdGreaterThan(prevCursor, PageRequest.of(0, PAGE_SIZE + 1, Direction.ASC, "id")),
-			articles -> !articleRepository.findAllByIdLessThan(articles.get(articles.size() - 1).getId(), PageRequest.of(0, 1, Direction.DESC, "id")).isEmpty(),
-			articles -> !articleRepository.findAllByIdGreaterThan(articles.get(0).getId(), PageRequest.of(0, 1, Direction.ASC, "id")).isEmpty()
+			articles -> !articleRepository.findAllByIdLessThan(articles.getLast().getId(), PageRequest.of(0, 1, Direction.DESC, "id")).isEmpty(),
+			articles -> !articleRepository.findAllByIdGreaterThan(articles.getFirst().getId(), PageRequest.of(0, 1, Direction.ASC, "id")).isEmpty()
 		);
 	}
 
@@ -43,8 +43,8 @@ public class ArticleQuery {
 			() -> articleRepository.findAllByBoard(board, PageRequest.of(0, PAGE_SIZE + 1, Direction.DESC, "id")),
 			() -> articleRepository.findAllByBoardAndIdLessThan(board, nextCursor, PageRequest.of(0, PAGE_SIZE + 1, Direction.DESC, "id")),
 			() -> articleRepository.findAllByBoardAndIdGreaterThan(board, prevCursor, PageRequest.of(0, PAGE_SIZE + 1, Direction.ASC, "id")),
-			articles -> !articleRepository.findAllByBoardAndIdLessThan(board, articles.get(articles.size() - 1).getId(), PageRequest.of(0, 1, Direction.DESC, "id")).isEmpty(),
-			articles -> !articleRepository.findAllByBoardAndIdGreaterThan(board, articles.get(0).getId(), PageRequest.of(0, 1, Direction.ASC, "id")).isEmpty()
+			articles -> !articleRepository.findAllByBoardAndIdLessThan(board, articles.getLast().getId(), PageRequest.of(0, 1, Direction.DESC, "id")).isEmpty(),
+			articles -> !articleRepository.findAllByBoardAndIdGreaterThan(board, articles.getFirst().getId(), PageRequest.of(0, 1, Direction.ASC, "id")).isEmpty()
 		);
 	}
 
@@ -71,11 +71,11 @@ public class ArticleQuery {
 		}
 
 		if (articles.size() == PAGE_SIZE + 1) {
-			articles.remove(0);
-			newPrevPageCursor = articles.get(0).getId() * -1;
+			articles.removeFirst();
+			newPrevPageCursor = articles.getFirst().getId() * -1;
 		}
 
-		Long newNextPageCursor = hasNextPageSupplier.test(articles) ? articles.get(articles.size() - 1).getId() : null;
+		Long newNextPageCursor = hasNextPageSupplier.test(articles) ? articles.getLast().getId() : null;
 
 		return new PageDto<>(articles.stream().map(ArticleDto::of).toList(), newPrevPageCursor, newNextPageCursor);
 	}
@@ -89,12 +89,12 @@ public class ArticleQuery {
 		List<Article> articles = (nextCursor == null) ? firstPageSupplier.get() : nextPageSupplier.get();
 
 		if (articles.size() == PAGE_SIZE + 1) {
-			articles.remove(articles.size() - 1);
-			newNextPageCursor = articles.get(articles.size() - 1).getId();
+			articles.removeLast();
+			newNextPageCursor = articles.getLast().getId();
 		}
 
 		if (!articles.isEmpty()) {
-			newPrevPageCursor = hasPrevPageSupplier.test(articles) ? articles.get(0).getId() * -1 : null;
+			newPrevPageCursor = hasPrevPageSupplier.test(articles) ? articles.getFirst().getId() * -1 : null;
 		}
 
 		return new PageDto<>(articles.stream().map(ArticleDto::of).toList(), newPrevPageCursor, newNextPageCursor);
