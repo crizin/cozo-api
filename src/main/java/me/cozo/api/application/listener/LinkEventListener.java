@@ -1,5 +1,11 @@
 package me.cozo.api.application.listener;
 
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import me.cozo.api.domain.event.ArticleUpdatedEvent;
 import me.cozo.api.domain.helper.LinkBuilder;
@@ -14,13 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -112,9 +111,9 @@ public class LinkEventListener {
 				}
 
 				if (link.getUrl().equals(originalUrl)) {
-					LOGGER.info("Fetch Link - Fetched [type={}, url={}]", link.getType(), link.getUrl());
+					LOGGER.info("Fetch Link - Fetched [type={}, url={}, title={}]", link.getType(), link.getUrl(), link.getTitle());
 				} else {
-					LOGGER.info("Fetch Link - Fetched [type={}, url={} => {}]", link.getType(), originalUrl, link.getUrl());
+					LOGGER.info("Fetch Link - Fetched [type={}, url={} => {}, title={}]", link.getType(), originalUrl, link.getUrl(), link.getTitle());
 				}
 
 				return link;
