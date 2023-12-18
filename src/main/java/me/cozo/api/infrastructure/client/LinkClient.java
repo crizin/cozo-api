@@ -69,11 +69,11 @@ public class LinkClient {
 			.ifPresent(link::updateThumbnailUrl);
 
 		if (StringUtils.isBlank(link.getTitle())) {
-			link.updateTitle(getMeta(document, "og:site_name", 1023, true));
+			link.updateTitle(document.title());
 		}
 
 		if (StringUtils.isBlank(link.getTitle())) {
-			link.updateTitle(document.title());
+			link.updateTitle(getMeta(document, "og:site_name", 1023, true));
 		}
 
 		if (StringUtils.isAllBlank(link.getTitle(), link.getThumbnailUrl())) {
