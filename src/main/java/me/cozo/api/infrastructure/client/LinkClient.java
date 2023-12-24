@@ -1,6 +1,6 @@
 package me.cozo.api.infrastructure.client;
 
-import io.micrometer.core.instrument.Metrics;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.application.crawler.CrawlerException;
 import me.cozo.api.application.crawler.HtmlParsingException;
@@ -35,20 +35,24 @@ public class LinkClient {
 	private static final Pattern PATTERN_URL = Pattern.compile("https?://[^/]+/[^\\s()<>\\[\\]'\"]+");
 	private static final Pattern PATTERN_BASE_URL = Pattern.compile("^(https?://[^/]+)");
 
-	private final Webs webs = Webs.builder()
-		.disableContentCompression()
-		.setConnectionTimeout(Duration.ofSeconds(5))
-		.setReadTimeout(Duration.ofSeconds(30))
-		.simulateBrowser(Browser.CHROME)
-		.registerMetrics(Metrics.globalRegistry)
-		.registerPreHook((context, request) -> {
-			try {
-				RateLimiterHelper.acquire(request.getUri().getHost());
-			} catch (URISyntaxException e) {
-				throw new CrawlerException(e);
-			}
-		})
-		.build();
+	private final Webs webs;
+
+	public LinkClient(ObservationRegistry observationRegistry) {
+		this.webs = Webs.builder()
+			.disableContentCompression()
+			.setConnectionTimeout(Duration.ofSeconds(5))
+			.setReadTimeout(Duration.ofSeconds(30))
+			.simulateBrowser(Browser.CHROME)
+			.registerObservation(observationRegistry)
+			.registerPreHook((context, request) -> {
+				try {
+					RateLimiterHelper.acquire(request.getUri().getHost());
+				} catch (URISyntaxException e) {
+					throw new CrawlerException(e);
+				}
+			})
+			.build();
+	}
 
 	public void fetchLink(Link link) {
 		var response = webs.get(link.getUrl()).fetch();

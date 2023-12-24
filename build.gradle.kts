@@ -1,6 +1,6 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.2.0"
+    id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.sonarqube") version "4.4.1.3373"
 }
@@ -41,16 +41,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     implementation("net.javacrumbs.shedlock:shedlock-spring:5.10.0")
-    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.10.0")
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.2.1")
+    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.10.2")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.3")
     implementation("org.apache.commons:commons-collections4:4.4")
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.apache.commons:commons-text:1.11.0")
-    implementation("com.google.guava:guava:32.1.3-jre")
+    implementation("com.google.guava:guava:33.0.0-jre")
     implementation("org.reflections:reflections:0.10.2")
-    implementation("org.jsoup:jsoup:1.16.2")
+    implementation("org.jsoup:jsoup:1.17.1")
     implementation("org.yaml:snakeyaml:2.2")
     implementation(project(":webs"))
     compileOnly("org.projectlombok:lombok")

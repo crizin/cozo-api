@@ -1,6 +1,6 @@
 package me.cozo.api.application.crawler;
 
-import io.micrometer.core.instrument.Metrics;
+import io.micrometer.observation.ObservationRegistry;
 import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.model.Board;
 import me.cozo.api.infrastructure.helper.DateUtils;
@@ -29,14 +29,14 @@ public abstract class Crawler implements Serializable {
 
 	protected final transient Webs webs;
 
-	protected Crawler() {
+	protected Crawler(ObservationRegistry observationRegistry) {
 		this.webs = Webs.builder()
 			.disableKeepAlive()
 			.disableContentCompression()
 			.setConnectionTimeout(Duration.ofSeconds(5))
 			.setReadTimeout(Duration.ofSeconds(30))
 			.simulateBrowser(Browser.CHROME)
-			.registerMetrics(Metrics.globalRegistry)
+			.registerObservation(observationRegistry)
 			.registerPreHook((context, request) -> {
 				try {
 					RateLimiterHelper.acquire(request.getUri().getHost());

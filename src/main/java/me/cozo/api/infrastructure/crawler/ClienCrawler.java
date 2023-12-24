@@ -1,5 +1,6 @@
 package me.cozo.api.infrastructure.crawler;
 
+import io.micrometer.observation.ObservationRegistry;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.application.crawler.Crawler;
 import me.cozo.api.domain.model.Article;
@@ -18,6 +19,10 @@ import java.util.stream.Stream;
 @Slf4j
 @Component
 public class ClienCrawler extends Crawler {
+
+	protected ClienCrawler(ObservationRegistry observationRegistry) {
+		super(observationRegistry);
+	}
 
 	@Override
 	public Stream<String> getPageRange(Board board, int size) {

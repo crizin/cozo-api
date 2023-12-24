@@ -1,5 +1,6 @@
 package me.cozo.api.infrastructure.crawler;
 
+import io.micrometer.observation.ObservationRegistry;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.application.crawler.Crawler;
 import me.cozo.api.domain.model.Article;
@@ -17,6 +18,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 public class RuliwebCrawler extends Crawler {
+
+	protected RuliwebCrawler(ObservationRegistry observationRegistry) {
+		super(observationRegistry);
+	}
 
 	@Override
 	protected Set<Article> getArticles(Board board, Document document) {
