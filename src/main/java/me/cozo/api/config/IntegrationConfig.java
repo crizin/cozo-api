@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @EnableIntegration
 public class IntegrationConfig implements BeanDefinitionRegistryPostProcessor {
 
