@@ -8,10 +8,9 @@ import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.TagRepository;
 import me.cozo.api.domain.repository.search.SearchRepository;
 import me.cozo.api.domain.search.ArticleDocument;
+import me.cozo.api.infrastructure.client.OpenAiClient;
 import me.cozo.api.infrastructure.client.SearchClient;
-import me.cozo.api.infrastructure.helper.TextUtils;
 import org.apache.commons.collections4.CollectionUtils;
-import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,6 +36,7 @@ public class ArticleEventListener {
 	private final ArticleRepository articleRepository;
 	private final TagRepository tagRepository;
 	private final SearchRepository searchRepository;
+	private final OpenAiClient openAiClient;
 
 	@Async("indexExecutor")
 	@EventListener
@@ -57,7 +57,7 @@ public class ArticleEventListener {
 		backoff = @Backoff(delay = 50, maxDelay = 500, multiplier = 1.5, random = true))
 	public void updateTags(ArticleIndexedEvent event) {
 		var article = articleRepository.findById(event.articleId()).orElseThrow();
-		var tagNames = searchClient.analyze(article.getTitle(), TextUtils.compactWhitespace(TextUtils.removeUrl(Jsoup.parse(article.getContent()).text())));
+		var tagNames = searchClient.analyze(article.getTitle(), article.getCompactContent());
 
 		LOGGER.info(
 			"Article found tags [site={}, originId={}, createdAt={}, id={}, size={}]",
@@ -82,5 +82,15 @@ public class ArticleEventListener {
 		}
 
 		articleRepository.save(article);
+	}
+
+	@Async
+	@EventListener
+	public void updateVector(ArticleIndexedEvent event) {
+		var article = articleRepository.findById(event.articleId()).orElseThrow();
+		article.updateVector(openAiClient.embedding("%s\n%s".formatted(article.getTitle(), article.getCompactContent())));
+		articleRepository.save(article);
+		searchRepository.save(ArticleDocument.of(article));
+		LOGGER.info("Article vector updated [site={}, originId={}, id={}]", article.getBoard().getSite().getKey(), article.getOriginId(), article.getId());
 	}
 }

@@ -92,7 +92,7 @@ public class SearchClient {
 
 		return tokens.stream()
 			.filter(this::acceptToken)
-			.map(token -> token.get("token").asText().toUpperCase().trim())
+			.map(token -> token.get("token").asText().toUpperCase().strip())
 			.collect(Collectors.toSet());
 	}
 

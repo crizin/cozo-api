@@ -1,4 +1,4 @@
-FROM elasticsearch:8.11.3
+FROM elasticsearch:8.12.0
 
 RUN bin/elasticsearch-plugin install analysis-nori
 

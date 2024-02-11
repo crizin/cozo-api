@@ -63,7 +63,7 @@ public class TextUtils {
 	}
 
 	public String compactWhitespace(String string) {
-		return PATTERN_WHITESPACE.matcher(string).replaceAll(" ").trim();
+		return PATTERN_WHITESPACE.matcher(string).replaceAll(" ").strip();
 	}
 
 	public String removeUrl(String string) {

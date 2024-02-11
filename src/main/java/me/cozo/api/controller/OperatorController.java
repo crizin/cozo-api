@@ -8,15 +8,18 @@ import me.cozo.api.application.command.DeleteArticleCommand;
 import me.cozo.api.application.command.RefreshLinkCommand;
 import me.cozo.api.application.scheduler.CrawlingScheduler;
 import me.cozo.api.application.scheduler.FreshnessCheckScheduler;
+import me.cozo.api.application.scheduler.VectorUpdateScheduler;
 import me.cozo.api.application.scheduler.WarmUpScheduler;
 import me.cozo.api.config.CommandGateway;
 import me.cozo.api.domain.dto.ResponseDto;
 import me.cozo.api.domain.event.ArticleUpdatedEvent;
 import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.BoardRepository;
+import me.cozo.api.infrastructure.client.OpenAiClient;
 import me.cozo.api.infrastructure.client.SearchClient;
 import me.cozo.api.infrastructure.exception.http.NotFoundException;
 import me.cozo.api.infrastructure.helper.DateUtils;
+import me.cozo.api.mapper.SearchQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -40,26 +43,32 @@ public class OperatorController {
 	private final ApplicationEventPublisher eventPublisher;
 	private final CommandGateway commandGateway;
 	private final SearchClient searchClient;
+	private final OpenAiClient openAiClient;
 	private final CrawlingScheduler crawlingScheduler;
 	private final FreshnessCheckScheduler freshnessCheckScheduler;
 	private final WarmUpScheduler warmUpScheduler;
+	private final VectorUpdateScheduler vectorUpdateScheduler;
 	private final ArticleRepository articleRepository;
 	private final BoardRepository boardRepository;
+	private final SearchQuery searchQuery;
 	private final Set<String> operatorAddresses;
 
 	public OperatorController(
-		ApplicationEventPublisher eventPublisher, CommandGateway commandGateway, SearchClient searchClient,
-		CrawlingScheduler crawlingScheduler, FreshnessCheckScheduler freshnessCheckScheduler, WarmUpScheduler warmUpScheduler,
-		ArticleRepository articleRepository, BoardRepository boardRepository, @Value("${cozo.operator-addresses}") Set<String> operatorAddresses)
-	{
+		ApplicationEventPublisher eventPublisher, CommandGateway commandGateway, SearchClient searchClient, OpenAiClient openAiClient, CrawlingScheduler crawlingScheduler,
+		FreshnessCheckScheduler freshnessCheckScheduler, WarmUpScheduler warmUpScheduler, VectorUpdateScheduler vectorUpdateScheduler, ArticleRepository articleRepository,
+		BoardRepository boardRepository, SearchQuery searchQuery, @Value("${cozo.operator-addresses}") Set<String> operatorAddresses
+	) {
 		this.eventPublisher = eventPublisher;
 		this.commandGateway = commandGateway;
 		this.searchClient = searchClient;
+		this.openAiClient = openAiClient;
 		this.crawlingScheduler = crawlingScheduler;
 		this.freshnessCheckScheduler = freshnessCheckScheduler;
 		this.warmUpScheduler = warmUpScheduler;
+		this.vectorUpdateScheduler = vectorUpdateScheduler;
 		this.articleRepository = articleRepository;
 		this.boardRepository = boardRepository;
+		this.searchQuery = searchQuery;
 		this.operatorAddresses = operatorAddresses;
 	}
 
@@ -128,6 +137,14 @@ public class OperatorController {
 		return ResponseDto.success();
 	}
 
+	@PostMapping("/search/similar")
+	@Operation(summary = "유사한 게시글 검색")
+	public ResponseDto<SearchQuery.VectorSearchResult> search(HttpServletRequest request, @RequestParam String content) {
+		requirePrivateRequest(request);
+		var vector = openAiClient.embedding(content);
+		return ResponseDto.success(searchQuery.search(vector, 20));
+	}
+
 	@PostMapping("/tag/trend/{days}")
 	@Operation(summary = "TagTrend 생성")
 	public ResponseDto<Void> tagTrendBuilder(HttpServletRequest request, @PathVariable int days) {
@@ -157,6 +174,14 @@ public class OperatorController {
 	public ResponseDto<Void> warmUp(HttpServletRequest request) {
 		requirePrivateRequest(request);
 		warmUpScheduler.run();
+		return ResponseDto.success();
+	}
+
+	@PostMapping("/manage/update-vector")
+	@Operation(summary = "Vector 업데이트")
+	public ResponseDto<Void> updateVector(HttpServletRequest request) {
+		requirePrivateRequest(request);
+		vectorUpdateScheduler.run();
 		return ResponseDto.success();
 	}
 
