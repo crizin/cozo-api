@@ -6,11 +6,9 @@ import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.search.SearchRepository;
 import me.cozo.api.domain.search.ArticleDocument;
 import me.cozo.api.infrastructure.client.OpenAiClient;
-import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -26,13 +24,13 @@ public class VectorUpdateScheduler {
 	private final OpenAiClient openAiClient;
 	private final SearchRepository searchRepository;
 
-	@Scheduled(cron = "0 0 * * * *")
-	@SchedulerLock(name = "VectorUpdateScheduler.run")
+//	@Scheduled(cron = "0 0 * * * *")
+//	@SchedulerLock(name = "VectorUpdateScheduler.run")
 	public void run() {
 		LOGGER.info("Start update vector update");
 
 		while (true) {
-			var articles = articleRepository.findAllByVectorIsNullAndCreatedAtBefore(PageRequest.ofSize(10), LocalDateTime.now().minusHours(1));
+			var articles = articleRepository.findAllByVectorIsNullAndCreatedAtBefore(PageRequest.ofSize(10), LocalDateTime.now().minusHours(100));
 
 			if (articles.isEmpty()) {
 				LOGGER.info("No articles to update vector");
