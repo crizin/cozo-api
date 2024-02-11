@@ -7,7 +7,6 @@ import me.cozo.api.application.command.BuildTagTrendCommand;
 import me.cozo.api.application.command.DeleteArticleCommand;
 import me.cozo.api.application.command.RefreshLinkCommand;
 import me.cozo.api.application.scheduler.CrawlingScheduler;
-import me.cozo.api.application.scheduler.FreshnessCheckScheduler;
 import me.cozo.api.application.scheduler.VectorUpdateScheduler;
 import me.cozo.api.application.scheduler.WarmUpScheduler;
 import me.cozo.api.config.CommandGateway;
@@ -45,7 +44,6 @@ public class OperatorController {
 	private final SearchClient searchClient;
 	private final OpenAiClient openAiClient;
 	private final CrawlingScheduler crawlingScheduler;
-	private final FreshnessCheckScheduler freshnessCheckScheduler;
 	private final WarmUpScheduler warmUpScheduler;
 	private final VectorUpdateScheduler vectorUpdateScheduler;
 	private final ArticleRepository articleRepository;
@@ -55,15 +53,14 @@ public class OperatorController {
 
 	public OperatorController(
 		ApplicationEventPublisher eventPublisher, CommandGateway commandGateway, SearchClient searchClient, OpenAiClient openAiClient, CrawlingScheduler crawlingScheduler,
-		FreshnessCheckScheduler freshnessCheckScheduler, WarmUpScheduler warmUpScheduler, VectorUpdateScheduler vectorUpdateScheduler, ArticleRepository articleRepository,
-		BoardRepository boardRepository, SearchQuery searchQuery, @Value("${cozo.operator-addresses}") Set<String> operatorAddresses
+		WarmUpScheduler warmUpScheduler, VectorUpdateScheduler vectorUpdateScheduler, ArticleRepository articleRepository, BoardRepository boardRepository, SearchQuery searchQuery,
+		@Value("${cozo.operator-addresses}") Set<String> operatorAddresses
 	) {
 		this.eventPublisher = eventPublisher;
 		this.commandGateway = commandGateway;
 		this.searchClient = searchClient;
 		this.openAiClient = openAiClient;
 		this.crawlingScheduler = crawlingScheduler;
-		this.freshnessCheckScheduler = freshnessCheckScheduler;
 		this.warmUpScheduler = warmUpScheduler;
 		this.vectorUpdateScheduler = vectorUpdateScheduler;
 		this.articleRepository = articleRepository;
@@ -158,14 +155,6 @@ public class OperatorController {
 			commandGateway.send(new BuildTagTrendCommand(target));
 		}
 
-		return ResponseDto.success();
-	}
-
-	@PostMapping("/manager/check-freshness")
-	@Operation(summary = "수집 스케쥴러 상태 확인")
-	public ResponseDto<Void> checkFreshness(HttpServletRequest request) {
-		requirePrivateRequest(request);
-		freshnessCheckScheduler.run();
 		return ResponseDto.success();
 	}
 
