@@ -20,6 +20,12 @@
 			"type": "text",
 			"analyzer": "korean_analyzer"
 		},
+		"vector": {
+			"type": "dense_vector",
+			"dims": 1536,
+			"index": "true",
+			"similarity": "cosine"
+		},
 		"createdAt": {
 			"type": "date",
 			"format": "date_hour_minute_second"

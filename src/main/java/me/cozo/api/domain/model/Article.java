@@ -2,6 +2,7 @@ package me.cozo.api.domain.model;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,12 +24,16 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import me.cozo.api.domain.converter.VectorConverter;
 import me.cozo.api.infrastructure.helper.DateUtils;
+import me.cozo.api.infrastructure.helper.TextUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.jsoup.Jsoup;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,6 +49,7 @@ import java.util.Set;
 	}
 )
 @SecondaryTable(name = "ArticleContent", pkJoinColumns = @PrimaryKeyJoinColumn(name = "articleId"))
+@SecondaryTable(name = "ArticleVector", pkJoinColumns = @PrimaryKeyJoinColumn(name = "articleId"))
 public class Article implements Serializable {
 
 	@Id
@@ -72,6 +78,11 @@ public class Article implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "ArticleTag", inverseJoinColumns = @JoinColumn(name = "tagId"))
 	private Set<Tag> tags;
+
+	@Convert(converter = VectorConverter.class)
+	@Column(table = "ArticleVector", columnDefinition = "JSON")
+	@Basic(fetch = FetchType.LAZY)
+	private List<Double> vector;
 
 	private int hits;
 
@@ -113,6 +124,10 @@ public class Article implements Serializable {
 		this.collectedAt = collectedAt;
 	}
 
+	public String getCompactContent() {
+		return TextUtils.compactWhitespace(TextUtils.removeUrl(Jsoup.parse(content).text()));
+	}
+
 	public String getPcUrl() {
 		return board.getContentUrlPc().formatted(originId);
 	}
@@ -152,6 +167,10 @@ public class Article implements Serializable {
 
 	public void updateContent(String content) {
 		this.content = content;
+	}
+
+	public void updateVector(List<Double> vector) {
+		this.vector = vector;
 	}
 
 	public void updateTags(Set<Tag> tags) {

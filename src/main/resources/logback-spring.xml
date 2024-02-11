@@ -139,6 +139,25 @@
 		<logger name="retry" level="info" additivity="false">
 			<appender-ref ref="retry-appender"/>
 		</logger>
+
+		<appender name="vector-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+			<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+				<level>INFO</level>
+			</filter>
+			<file>logs/vector.log</file>
+			<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+				<maxHistory>3</maxHistory>
+				<fileNamePattern>logs/archive/vector-%d{yyyy-MM-dd}.log</fileNamePattern>
+			</rollingPolicy>
+			<encoder>
+				<charset>UTF-8</charset>
+				<pattern>%d{HH:mm:ss} %msg%n</pattern>
+			</encoder>
+		</appender>
+
+		<logger name="vector" level="info" additivity="false">
+			<appender-ref ref="vector-appender"/>
+		</logger>
 	</springProfile>
 
 	<root level="info">

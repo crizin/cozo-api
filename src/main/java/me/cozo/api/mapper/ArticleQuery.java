@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -46,6 +47,10 @@ public class ArticleQuery {
 			articles -> !articleRepository.findAllByBoardAndIdLessThan(board, articles.getLast().getId(), PageRequest.of(0, 1, Direction.DESC, "id")).isEmpty(),
 			articles -> !articleRepository.findAllByBoardAndIdGreaterThan(board, articles.getFirst().getId(), PageRequest.of(0, 1, Direction.ASC, "id")).isEmpty()
 		);
+	}
+
+	public Optional<Article> getArticle(Long articleId) {
+		return articleRepository.findById(articleId);
 	}
 
 	private PageDto<List<ArticleDto>, Long> getArticles(

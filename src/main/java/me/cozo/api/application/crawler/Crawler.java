@@ -116,7 +116,7 @@ public abstract class Crawler implements Serializable {
 			.map(TextNode::text)
 			.filter(StringUtils::isNotBlank)
 			.collect(Collectors.joining(" "))
-			.trim();
+			.strip();
 	}
 
 	protected final int number(Element element, String selector) {
