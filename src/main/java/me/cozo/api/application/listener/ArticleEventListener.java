@@ -88,7 +88,7 @@ public class ArticleEventListener {
 	@EventListener
 	public void updateVector(ArticleIndexedEvent event) {
 		var article = articleRepository.findById(event.articleId()).orElseThrow();
-		article.updateVector(openAiClient.embedding("%s\n%s".formatted(article.getTitle(), article.getCompactContent())));
+		article.updateVector(openAiClient.embedding("%s%n%s".formatted(article.getTitle(), article.getCompactContent())));
 		articleRepository.save(article);
 		searchRepository.save(ArticleDocument.of(article));
 		LOGGER.info("Article vector updated [site={}, originId={}, id={}]", article.getBoard().getSite().getKey(), article.getOriginId(), article.getId());

@@ -11,7 +11,7 @@ import java.util.List;
 @Converter
 public class VectorConverter implements AttributeConverter<List<Double>, String> {
 
-	private final static ObjectMapper objectMapper = new ObjectMapper();
+	private static final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	public String convertToDatabaseColumn(List<Double> attribute) {
@@ -27,6 +27,7 @@ public class VectorConverter implements AttributeConverter<List<Double>, String>
 	}
 
 	@Override
+	@SuppressWarnings("java:S1168")
 	public List<Double> convertToEntityAttribute(String dbData) {
 		if (dbData == null) {
 			return null;

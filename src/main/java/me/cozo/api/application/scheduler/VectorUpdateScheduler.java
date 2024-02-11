@@ -40,7 +40,7 @@ public class VectorUpdateScheduler {
 			}
 
 			articles.forEach(article -> {
-				var vector = openAiClient.embedding("%s\n%s".formatted(article.getTitle(), article.getContent()));
+				var vector = openAiClient.embedding("%s%n%s".formatted(article.getTitle(), article.getContent()));
 				article.updateVector(vector);
 				articleRepository.save(article);
 				searchRepository.save(ArticleDocument.of(article));
