@@ -8,7 +8,6 @@ import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.TagRepository;
 import me.cozo.api.domain.repository.search.SearchRepository;
 import me.cozo.api.domain.search.ArticleDocument;
-import me.cozo.api.infrastructure.client.OpenAiClient;
 import me.cozo.api.infrastructure.client.SearchClient;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -36,7 +35,6 @@ public class ArticleEventListener {
 	private final ArticleRepository articleRepository;
 	private final TagRepository tagRepository;
 	private final SearchRepository searchRepository;
-	private final OpenAiClient openAiClient;
 
 	@Async("indexExecutor")
 	@EventListener
@@ -82,15 +80,5 @@ public class ArticleEventListener {
 		}
 
 		articleRepository.save(article);
-	}
-
-	@Async
-	@EventListener
-	public void updateVector(ArticleIndexedEvent event) {
-		var article = articleRepository.findById(event.articleId()).orElseThrow();
-		article.updateVector(openAiClient.embedding("%s%n%s".formatted(article.getTitle(), article.getCompactContent())));
-		articleRepository.save(article);
-		searchRepository.save(ArticleDocument.of(article));
-		LOGGER.info("Article vector updated [site={}, originId={}, id={}]", article.getBoard().getSite().getKey(), article.getOriginId(), article.getId());
 	}
 }

@@ -107,12 +107,6 @@ public class MainController {
 		return ResponseDto.success(searchQuery.search(keyword, page, board.getId()));
 	}
 
-	@GetMapping("/search/similar/{articleId}")
-	public ResponseDto<SearchQuery.VectorSearchResult> search(@PathVariable Long articleId) {
-		var article = articleQuery.getArticle(articleId).orElseThrow(NotFoundException::new);
-		return ResponseDto.success(searchQuery.search(article.getVector(), 20));
-	}
-
 	@PostMapping("/send-message")
 	public ResponseDto<String> sendMessage(HttpServletRequest request, @RequestParam @NotBlank String token, @RequestParam @NotBlank String message) {
 		var success = captchaClient.check(token, request.getRemoteAddr());

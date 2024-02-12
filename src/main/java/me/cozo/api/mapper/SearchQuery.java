@@ -1,11 +1,9 @@
 package me.cozo.api.mapper;
 
-import co.elastic.clients.elasticsearch._types.KnnQuery;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.LongTermsBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.Operator;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
-import co.elastic.clients.json.JsonData;
 import lombok.RequiredArgsConstructor;
 import me.cozo.api.domain.dto.ArticleDto;
 import me.cozo.api.domain.dto.PageDto;
@@ -15,13 +13,11 @@ import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.BoardRepository;
 import me.cozo.api.domain.repository.search.SearchRepository;
 import me.cozo.api.domain.search.ArticleDocument;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.client.elc.NativeQuery;
-import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.query.HighlightQuery;
@@ -30,11 +26,7 @@ import org.springframework.data.elasticsearch.core.query.highlight.HighlightFiel
 import org.springframework.data.elasticsearch.core.query.highlight.HighlightFieldParameters;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -165,52 +157,6 @@ public class SearchQuery {
 		return new PageDto<>(result, prevPage, nextPage);
 	}
 
-	public VectorSearchResult search(List<Double> vector, int pageSize) {
-		if (CollectionUtils.isEmpty(vector)) {
-			return VectorSearchResult.EMPTY;
-		}
-
-		var sevenDaysAgo = LocalDateTime.now().minusDays(7).truncatedTo(ChronoUnit.SECONDS)
-			.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-
-		var query = new NativeQueryBuilder()
-			.withKnnQuery(new KnnQuery.Builder()
-				.field("vector")
-				.queryVector(vector.stream().map(Double::floatValue).toList())
-				.k(pageSize)
-				.numCandidates(pageSize * 10L)
-				.build()
-			)
-			.withQuery(QueryBuilders.bool(bool ->
-				bool.must(must ->
-					must.range(range ->
-						range
-							.field("createdAt")
-							.gte(JsonData.of(sevenDaysAgo))
-					))
-			))
-			.build();
-
-		var response = operations.search(query, ArticleDocument.class);
-
-		var articleIds = response.get()
-			.map(SearchHit::getContent)
-			.map(ArticleDocument::getId)
-			.distinct()
-			.toList();
-
-		var articles = articleRepository.findAllById(articleIds).stream().collect(Collectors.toMap(Article::getId, Function.identity()));
-
-		return new VectorSearchResult(
-			response.getTotalHits(),
-			articleIds.stream().map(articles::get).filter(Objects::nonNull).map(ArticleDto::of).toList(),
-			response.getSearchHits().stream().collect(Collectors.toMap(
-				hit -> hit.getContent().getId(),
-				SearchHit::getScore
-			))
-		);
-	}
-
 	private String escape(String keyword) {
 		String query = PATTERN_ELASTICSEARCH_ESCAPE_CHARACTERS.matcher(keyword).replaceAll(" ");
 
@@ -229,14 +175,5 @@ public class SearchQuery {
 		Map<Long, String> contents,
 		Map<Long, Long> boardCounts
 	) {
-	}
-
-	public record VectorSearchResult(
-		long totalHits,
-		List<ArticleDto> articles,
-		Map<Long, Float> scores
-	) {
-
-		public static VectorSearchResult EMPTY = new VectorSearchResult(0, Collections.emptyList(), Collections.emptyMap());
 	}
 }

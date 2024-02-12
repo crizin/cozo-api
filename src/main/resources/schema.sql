@@ -54,13 +54,6 @@ CREATE TABLE IF NOT EXISTS article_content (
 	CONSTRAINT fk_article_content_article_id FOREIGN KEY (article_id) REFERENCES article (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS article_vector (
-	article_id BIGINT NOT NULL,
-	vector     JSON   NOT NULL,
-	PRIMARY KEY (article_id),
-	CONSTRAINT fk_article_vector_article_id FOREIGN KEY (article_id) REFERENCES article (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 CREATE TABLE IF NOT EXISTS article_link (
 	article_id BIGINT NOT NULL,
 	link_id    BIGINT NOT NULL,

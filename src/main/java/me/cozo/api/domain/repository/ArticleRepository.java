@@ -37,7 +37,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
 	List<Article> findAllByTagsContainsAndCreatedAtBetweenOrderByClicksDescCreatedAtDesc(Tag tag, LocalDateTime begin, LocalDateTime end, Pageable pageable);
 
-	List<Article> findAllByVectorIsNullAndCreatedAtBefore(Pageable pageable, LocalDateTime dateTime);
-
 	List<Article> findTop5ByLinksContainsOrderByCreatedAtDesc(Link link);
 }

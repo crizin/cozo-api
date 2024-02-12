@@ -23,7 +23,6 @@ $ docker compose up -d
 - `DB_PASSWORD`: MySQL password
 - `SLACK_WEBHOOK_URL`: Slack webhook URL
 - `TURNSTILE_SECRET`: [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) secret
-- `OPENAI_API_KEY`: OpenAI API key
 
 ## GitHub Action
 

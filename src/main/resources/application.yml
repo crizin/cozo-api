@@ -44,16 +44,13 @@ logging:
     org.springframework.integration.handler.LoggingHandler: off
 
 cozo:
-  operator-addresses: 172.18.0.1, 127.0.0.1, 0:0:0:0:0:0:0:1
   service-host: https://cozo.me
   slack:
     url: ${SLACK_WEBHOOK_URL:}
   turnstile:
     url: https://challenges.cloudflare.com
     secret: ${TURNSTILE_SECRET:}
-  openai:
-    key: ${OPENAI_API_KEY:}
-    url: https://api.openai.com
+  operator-addresses: 172.18.0.1, 127.0.0.1, 0:0:0:0:0:0:0:1
 
 ---
 
