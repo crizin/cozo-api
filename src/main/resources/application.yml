@@ -77,7 +77,7 @@ spring:
       on-profile: production
   data:
     redis:
-      host: redis
+      host: redis-stack
   datasource:
     url: jdbc:mysql://mysql/cozo
     username: ${DB_USERNAME}
