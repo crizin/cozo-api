@@ -23,6 +23,7 @@ $ docker compose up -d
 - `DB_PASSWORD`: MySQL password
 - `SLACK_WEBHOOK_URL`: Slack webhook URL
 - `TURNSTILE_SECRET`: [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) secret
+- `SENTRY_AUTH_TOKEN`: [Sentry](https://sentry.io/) auth token
 
 ## GitHub Action
 

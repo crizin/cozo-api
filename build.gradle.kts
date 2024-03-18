@@ -3,6 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.4"
     id("org.sonarqube") version "4.4.1.3373"
+    id("io.sentry.jvm.gradle") version "4.3.1"
 }
 
 group = "me.cozo"
@@ -28,6 +29,13 @@ sonar {
         property("sonar.organization", "crizin")
         property("sonar.host.url", "https://sonarcloud.io")
     }
+}
+
+sentry {
+    includeSourceContext = true
+    org = "unply"
+    projectName = "cozo-api"
+    authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 
 dependencies {
