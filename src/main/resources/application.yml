@@ -90,7 +90,3 @@ springdoc:
     enabled: false
   swagger-ui:
     enabled: false
-
-sentry:
-  dsn: https://3d40dba057ffb1916d6a6cbbb07b5ee3@o4504780775948288.ingest.us.sentry.io/4506930581667840
-  traces-sample-rate: 0.1
