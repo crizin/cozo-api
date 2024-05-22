@@ -25,13 +25,13 @@ public class YgosuCrawler extends Crawler {
 	@Override
 	protected Set<Article> getArticles(Board board, Document document) {
 		return document.select("table.bd_list tbody tr:not(.notice)").stream()
-			.filter(tr -> tr.select("td").size() > 1)
+			.filter(tr -> tr.select("td.tit").size() > 1)
 			.map(tr -> Article.builder()
 				.board(board)
 				.originId(TextUtils.getFragment(attr(tr, "td.tit a", "href"), "/yeobgi/(\\d+)"))
 				.title(text(tr, "td.tit a"))
 				.hits(number(tr, "td.read"))
-				.comments(number(tr, "span.con-comment"))
+				.comments(number(tr, "td.tit span strong"))
 				.likes(number(tr, "td.vote"))
 				.containsImage(false)
 				.containsVideo(false)
