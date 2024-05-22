@@ -37,8 +37,8 @@ VALUES (7, 7, 'BULLPEN', 'https://mlbpark.donga.com/mp/b.php?b=bullpen', 'https:
 		'https://mlbpark.donga.com/mp/b.php?p=%s&m=list&b=bullpen&query=&select=&user=', 'https://mlbpark.donga.com/mp/b.php?b=bullpen&id=%s',
 		'https://mlbpark.donga.com/mp/b.php?b=bullpen&id=%s', 'me.cozo.api.infrastructure.crawler.MlbParkCrawler', b'1');
 INSERT IGNORE INTO board
-VALUES (8, 8, '엽기자랑', 'https://ygosu.com/community/yeobgi', 'https://m.ygosu.com/board/yeobgi', 'https://ygosu.com/community/yeobgi/?page=%s',
-		'https://ygosu.com/community/yeobgi/%s', 'https://m.ygosu.com/board/yeobgi/%s', 'me.cozo.api.infrastructure.crawler.YgosuCrawler', b'1');
+VALUES (8, 8, '엽기자랑', 'https://ygosu.com/board/yeobgi', 'https://m.ygosu.com/board/yeobgi', 'https://ygosu.com/board/yeobgi/?page=%s',
+		'https://ygosu.com/board/yeobgi/%s', 'https://m.ygosu.com/board/yeobgi/%s', 'me.cozo.api.infrastructure.crawler.YgosuCrawler', b'1');
 INSERT IGNORE INTO board
 VALUES (9, 9, '자유게시판', 'https://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard', 'https://m.ppomppu.co.kr/new/bbs_list.php?id=freeboard',
 		'https://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard&page=%s', 'https://www.ppomppu.co.kr/zboard/view.php?id=freeboard&no=%s',
