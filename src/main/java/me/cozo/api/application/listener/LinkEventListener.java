@@ -41,7 +41,7 @@ public class LinkEventListener {
 		Pattern.compile("^https?://[\\w-]\\.clickmon\\.co\\.kr/", Pattern.CASE_INSENSITIVE),
 		Pattern.compile("^https?://s\\.ppomppu\\.co\\.kr", Pattern.CASE_INSENSITIVE),
 		Pattern.compile("^https?://ygosu.com/community/board/download.yg", Pattern.CASE_INSENSITIVE),
-		Pattern.compile("^https?://(\\w+\\.)?(twitter\\.com|t\\.co|facebook\\.com|instagram\\.com)/", Pattern.CASE_INSENSITIVE),
+		Pattern.compile("^https?://(\\w+\\.)?(x\\.com|twitter\\.com|t\\.co|facebook\\.com|instagram\\.com)/", Pattern.CASE_INSENSITIVE),
 		Pattern.compile("popall\\.net|link\\.naver\\.com|nid\\.naver\\.com|www\\.w3\\.org|notfound\\.html|email-protection|/ads/|ico_noimg_thumb", Pattern.CASE_INSENSITIVE),
 	};
 
