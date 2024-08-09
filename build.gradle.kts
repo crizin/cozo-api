@@ -1,7 +1,7 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.3.1"
-    id("io.spring.dependency-management") version "1.1.5"
+    id("org.springframework.boot") version "3.3.2"
+    id("io.spring.dependency-management") version "1.1.6"
     id("org.sonarqube") version "4.4.1.3373"
 }
 
@@ -48,11 +48,11 @@ dependencies {
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.13.0")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
     implementation("org.apache.commons:commons-collections4:4.4")
-    implementation("org.apache.commons:commons-lang3:3.14.0")
-    implementation("org.apache.commons:commons-text:1.11.0")
+    implementation("org.apache.commons:commons-lang3:3.16.0")
+    implementation("org.apache.commons:commons-text:1.12.0")
     implementation("com.google.guava:guava:33.2.1-jre")
     implementation("org.reflections:reflections:0.10.2")
-    implementation("org.jsoup:jsoup:1.17.2")
+    implementation("org.jsoup:jsoup:1.18.1")
     implementation("org.yaml:snakeyaml:2.2")
     implementation(project(":webs"))
     compileOnly("org.projectlombok:lombok")
