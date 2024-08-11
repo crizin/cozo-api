@@ -66,6 +66,10 @@ public class TextUtils {
 		return PATTERN_WHITESPACE.matcher(string).replaceAll(" ").strip();
 	}
 
+	public String removeWhitespace(String string) {
+		return PATTERN_WHITESPACE.matcher(string).replaceAll("");
+	}
+
 	public String removeUrl(String string) {
 		return PATTERN_URL.matcher(string).replaceAll(" ");
 	}

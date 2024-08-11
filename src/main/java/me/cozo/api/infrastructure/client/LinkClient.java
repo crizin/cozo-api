@@ -118,7 +118,7 @@ public class LinkClient {
 		}
 
 		try {
-			return new URI(baseUrl).resolve(originalUrl.strip()).toString();
+			return new URI(baseUrl).resolve(TextUtils.removeWhitespace(originalUrl)).toString();
 		} catch (URISyntaxException e) {
 			throw new InvalidLinkException("Invalid URL pattern [baseUrl=%s, originalUrl=%s]".formatted(baseUrl, originalUrl));
 		}
