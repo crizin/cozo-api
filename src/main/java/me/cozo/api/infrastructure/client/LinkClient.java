@@ -42,7 +42,7 @@ public class LinkClient {
 			.disableContentCompression()
 			.setConnectionTimeout(Duration.ofSeconds(5))
 			.setReadTimeout(Duration.ofSeconds(30))
-			.simulateBrowser(Browser.CHROME)
+			.simulateBrowser(Browser.FACEBOOK_EXTERNAL_HIT)
 			.registerObservation(observationRegistry)
 			.registerPreHook((context, request) -> {
 				try {
