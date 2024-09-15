@@ -15,12 +15,12 @@ import java.util.regex.Matcher;
 import java.util.stream.Stream;
 
 @Component
-public class YoutubeClient {
+public class YouTubeClient {
 
 	private final String apiKey;
 	private final Webs webs = Webs.builder().baseUrl("https://www.googleapis.com").build();
 
-	public YoutubeClient(@Value("${cozo.youtube.api-key}") String apiKey) {
+	public YouTubeClient(@Value("${cozo.youtube.api-key}") String apiKey) {
 		this.apiKey = apiKey;
 	}
 
@@ -67,7 +67,7 @@ public class YoutubeClient {
 		link.updateTitle(snippet.title());
 		link.updateDescription(snippet.description());
 		link.updateThumbnailUrl(snippet.getLargestThumbnail());
-		link.updateFaviconUrl("https://www.gstatic.com/youtube/img/watch/yt_favicon_square_ringo2.png");
+		link.updateFaviconUrl("https://m.youtube.com/static/favicon.ico");
 	}
 
 	private record Videos(List<Video> items) {

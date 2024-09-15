@@ -36,9 +36,9 @@ public class LinkClient {
 	private static final Pattern PATTERN_BASE_URL = Pattern.compile("^(https?://[^/]+)");
 
 	private final Webs webs;
-	private final YoutubeClient youtubeClient;
+	private final YouTubeClient youTubeClient;
 
-	public LinkClient(ObservationRegistry observationRegistry, YoutubeClient youtubeClient) {
+	public LinkClient(ObservationRegistry observationRegistry, YouTubeClient youTubeClient) {
 		this.webs = Webs.builder()
 			.disableContentCompression()
 			.setConnectionTimeout(Duration.ofSeconds(5))
@@ -53,13 +53,13 @@ public class LinkClient {
 				}
 			})
 			.build();
-		this.youtubeClient = youtubeClient;
+		this.youTubeClient = youTubeClient;
 	}
 
 	public void fetchLink(Link link) {
-		if (youtubeClient.isYoutubeVideo(link)) {
+		if (youTubeClient.isYoutubeVideo(link)) {
 			try {
-				youtubeClient.fetchVideo(link);
+				youTubeClient.fetchVideo(link);
 				return;
 			} catch (Exception e) {
 				log.error("Failed to fetch Youtube video", e);
