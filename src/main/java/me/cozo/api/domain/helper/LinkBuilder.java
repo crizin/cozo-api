@@ -29,7 +29,7 @@ public enum LinkBuilder {
 	),
 	YOUTUBE_1(
 		Type.VIDEO,
-		"(?:https?:)?//(?:\\w+\\.)?youtube(?:-nocookie)?\\.com/(?:watch\\?(?:.*?)\\bv=|embed/|v/|shorts/)([^&?]+)",
+		"(?:https?:)?//(?:\\w+\\.)?youtube(?:-nocookie)?\\.com/(?:watch\\?(?:.*?)\\bv=|embed/|v/|shorts/|live/)([^&?]+)",
 		"https://www.youtube.com/watch?v=%s"
 	),
 	YOUTUBE_2(
