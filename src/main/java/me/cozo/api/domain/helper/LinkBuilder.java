@@ -1,5 +1,6 @@
 package me.cozo.api.domain.helper;
 
+import lombok.Getter;
 import me.cozo.api.application.crawler.InvalidLinkException;
 import me.cozo.api.domain.model.Link;
 import me.cozo.api.domain.model.Link.Type;
@@ -9,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
+@Getter
 public enum LinkBuilder {
 	TYPICAL_IMAGE(
 		Type.IMAGE,

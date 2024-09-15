@@ -48,6 +48,8 @@ logging:
 
 cozo:
   service-host: https://cozo.me
+  youtube:
+    api-key: ${YOUTUBE_API_KEY:}
   slack:
     url: ${SLACK_WEBHOOK_URL:}
   turnstile:
