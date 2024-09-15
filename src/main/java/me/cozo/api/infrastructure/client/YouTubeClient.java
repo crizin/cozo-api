@@ -64,8 +64,8 @@ public class YouTubeClient {
 		var snippet = video.snippet();
 
 		link.updateUrl("https://www.youtube.com/watch?v=" + videoId);
-		link.updateTitle(snippet.title());
-		link.updateDescription(snippet.description());
+		link.updateTitle(StringUtils.abbreviate(snippet.title(), 1023));
+		link.updateDescription(StringUtils.abbreviate(snippet.description(), 1023));
 		link.updateThumbnailUrl(snippet.getLargestThumbnail());
 		link.updateFaviconUrl("https://m.youtube.com/static/favicon.ico");
 	}
