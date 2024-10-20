@@ -59,7 +59,7 @@ public class SearchQuery {
 			.withQuery(QueryBuilders.bool(bool -> {
 				bool.must(must -> must.queryString(queryString ->
 						queryString.fields("title", "content")
-							.defaultOperator(Operator.Or)
+							.defaultOperator(Operator.And)
 							.query(escape(keyword))
 					)
 				);
