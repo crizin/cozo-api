@@ -64,6 +64,18 @@ public class DateUtils {
 		PATTERN_HUMAN_READABLE2(
 			"^(\\d{1,2})시간\\s*전$",
 			m -> LocalDateTime.now().minusHours(i(m.group(1)))
+		),
+		PATTERN_HUMAN_READABLE3(
+			"^(\\d{1,2})일\\s*전$",
+			m -> LocalDateTime.now().minusDays(i(m.group(1)))
+		),
+		PATTERN_HUMAN_READABLE4(
+			"^(\\d{1,2})개월\\s*전$",
+			m -> LocalDateTime.now().minusMonths(i(m.group(1)))
+		),
+		PATTERN_HUMAN_READABLE5(
+			"^(\\d{1,2})년\\s*전$",
+			m -> LocalDateTime.now().minusYears(i(m.group(1)))
 		);
 
 		private final Pattern pattern;
