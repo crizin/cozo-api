@@ -58,7 +58,7 @@ public class DateUtils {
 			m -> LocalDateTime.of(LocalDate.now().getYear(), i(m.group(1)), i(m.group(2)), i(m.group(3)), i(m.group(4)))
 		),
 		PATTERN_HUMAN_READABLE1(
-			"^(\\d{1,2})분전$",
+			"^(\\d{1,2})분\\s*전$",
 			m -> LocalDateTime.now().minusMinutes(i(m.group(1)))
 		);
 
