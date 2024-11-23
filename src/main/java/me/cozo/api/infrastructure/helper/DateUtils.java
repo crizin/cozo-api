@@ -60,6 +60,10 @@ public class DateUtils {
 		PATTERN_HUMAN_READABLE1(
 			"^(\\d{1,2})분\\s*전$",
 			m -> LocalDateTime.now().minusMinutes(i(m.group(1)))
+		),
+		PATTERN_HUMAN_READABLE2(
+			"^(\\d{1,2})시간\\s*전$",
+			m -> LocalDateTime.now().minusHours(i(m.group(1)))
 		);
 
 		private final Pattern pattern;
