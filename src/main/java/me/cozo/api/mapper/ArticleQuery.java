@@ -7,6 +7,7 @@ import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.model.Board;
 import me.cozo.api.domain.repository.ArticleRepository;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ public class ArticleQuery {
 
 	private static final int PAGE_SIZE = 40;
 
+	private final ApplicationContext applicationContext;
 	private final ArticleRepository articleRepository;
 
 	@Cacheable(cacheNames = "articles", cacheManager = "oneMinuteCacheManager", key = "{#prevCursor, #nextCursor}")
@@ -44,7 +46,8 @@ public class ArticleQuery {
 			() -> articleRepository.findAllByBoardAndIdLessThan(board, nextCursor, PageRequest.of(0, PAGE_SIZE + 1, Direction.DESC, "id")),
 			() -> articleRepository.findAllByBoardAndIdGreaterThan(board, prevCursor, PageRequest.of(0, PAGE_SIZE + 1, Direction.ASC, "id")),
 			articles -> !articleRepository.findAllByBoardAndIdLessThan(board, articles.getLast().getId(), PageRequest.of(0, 1, Direction.DESC, "id")).isEmpty(),
-			articles -> !articleRepository.findAllByBoardAndIdGreaterThan(board, articles.getFirst().getId(), PageRequest.of(0, 1, Direction.ASC, "id")).isEmpty()
+			articles -> !articleRepository.findAllByBoardAndIdGreaterThan(board, articles.getFirst().getId(), PageRequest.of(0, 1, Direction.ASC, "id"))
+				.isEmpty()
 		);
 	}
 
@@ -67,7 +70,7 @@ public class ArticleQuery {
 		Collections.reverse(articles);
 
 		if (articles.size() < PAGE_SIZE) {
-			return getArticles(null, null);
+			return applicationContext.getBean(this.getClass()).getArticles(null, null);
 		}
 
 		if (articles.size() == PAGE_SIZE + 1) {

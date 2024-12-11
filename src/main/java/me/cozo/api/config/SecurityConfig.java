@@ -44,7 +44,7 @@ public class SecurityConfig {
 				.contentSecurityPolicy(config -> config.policyDirectives(
 					"default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; script-src 'strict-dynamic' 'nonce-R4nd0m';"
 				))
-				.permissionsPolicy(config -> config.policy("geolocation=(), microphone=(), camera=()"))
+				.permissionsPolicyHeader(config -> config.policy("geolocation=(), microphone=(), camera=()"))
 			);
 		}
 
