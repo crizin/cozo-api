@@ -69,7 +69,7 @@ public class Link implements Serializable {
 	private LocalDateTime lastUsedAt;
 
 	@Builder(toBuilder = true)
-	@SuppressWarnings({"unused", "java:S107"})
+	@SuppressWarnings("unused")
 	private Link(Type type, String host, String url, String title, String description, String faviconUrl, String thumbnailUrl, LocalDateTime lastUsedAt) {
 		this.type = type;
 		this.host = host;

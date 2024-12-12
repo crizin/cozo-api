@@ -47,7 +47,6 @@ public class OperatorController {
 	private final BoardRepository boardRepository;
 	private final Set<String> operatorAddresses;
 
-	@SuppressWarnings("java:S107")
 	public OperatorController(
 		ApplicationEventPublisher eventPublisher, CommandGateway commandGateway, SearchClient searchClient, CrawlingScheduler crawlingScheduler,
 		FreshnessCheckScheduler freshnessCheckScheduler, WarmUpScheduler warmUpScheduler, ArticleRepository articleRepository, BoardRepository boardRepository,

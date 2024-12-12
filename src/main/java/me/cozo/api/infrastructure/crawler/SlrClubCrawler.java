@@ -25,7 +25,6 @@ public class SlrClubCrawler extends Crawler {
 	}
 
 	@Override
-	@SuppressWarnings("java:S6204")
 	public Stream<String> getPageRange(Board board, int size) {
 		var document = fetch(board.getMainUrlPc());
 		var pages = document.select("table.pageN td.list_num a").stream()

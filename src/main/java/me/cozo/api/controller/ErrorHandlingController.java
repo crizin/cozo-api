@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ErrorHandlingController implements ErrorController {
 
 	@RequestMapping("/error")
-	@SuppressWarnings("java:S3752")
 	public ResponseEntity<ResponseDto<Void>> handle(HttpServletResponse response) {
 		var status = HttpStatus.valueOf(response.getStatus());
 		return new ResponseEntity<>(ResponseDto.error(status.getReasonPhrase()), status);
