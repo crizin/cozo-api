@@ -40,14 +40,17 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@SuppressWarnings("java:S1192")
 public class SearchQuery {
 
 	private static final Set<String> STOP_QUERIES = Set.of("AND", "OR", "NOT");
 	private static final Pattern PATTERN_ELASTICSEARCH_ESCAPE_CHARACTERS = Pattern.compile("[+\\-=&|><!(){}\\[\\]^\"~*?:\\\\/]");
-	private static final HighlightQuery HIGHLIGHT_QUERY = new HighlightQuery(new Highlight(List.of(
-		new HighlightField("title", HighlightFieldParameters.builder().withPreTags("@@HL@@").withPostTags("@@/HL@@").build()),
-		new HighlightField("content", HighlightFieldParameters.builder().withPreTags("@@HL@@").withPostTags("@@/HL@@").build())
-	)), ArticleDocument.class);
+	private static final HighlightQuery HIGHLIGHT_QUERY = new HighlightQuery(
+		new Highlight(List.of(
+			new HighlightField("title", HighlightFieldParameters.builder().withPreTags("@@HL@@").withPostTags("@@/HL@@").build()),
+			new HighlightField("content", HighlightFieldParameters.builder().withPreTags("@@HL@@").withPostTags("@@/HL@@").build())
+		)), ArticleDocument.class
+	);
 
 	private final ElasticsearchOperations operations;
 	private final BoardRepository boardRepository;

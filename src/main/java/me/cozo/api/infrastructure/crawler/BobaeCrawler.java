@@ -24,6 +24,7 @@ public class BobaeCrawler extends Crawler {
 	}
 
 	@Override
+	@SuppressWarnings("java:S1192")
 	protected Set<Article> getArticles(Board board, Document document) {
 		return document.select("#boardlist tbody tr:not(.best)").stream()
 			.filter(tr -> has(tr, "a.bsubject"))

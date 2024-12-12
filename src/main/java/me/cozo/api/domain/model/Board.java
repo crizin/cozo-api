@@ -59,7 +59,7 @@ public class Board implements Serializable {
 	private boolean active;
 
 	@Builder(toBuilder = true)
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "java:S107"})
 	private Board(
 		Site site, String name, String mainUrlPc, String mainUrlMobile, String pagingUrlPc, String contentUrlPc, String contentUrlMobile,
 		Class<? extends Crawler> crawlerClass, boolean active

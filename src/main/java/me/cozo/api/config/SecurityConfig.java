@@ -29,6 +29,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	@SuppressWarnings("java:S4502")
 	public SecurityFilterChain filterChain(Environment environment, HttpSecurity httpSecurity) throws Exception {
 		var isProduction = environment.acceptsProfiles(Profiles.of("production"));
 

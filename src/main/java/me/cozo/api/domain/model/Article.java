@@ -94,7 +94,7 @@ public class Article implements Serializable {
 	private LocalDateTime collectedAt;
 
 	@Builder(toBuilder = true)
-	@SuppressWarnings("unused")
+	@SuppressWarnings({"unused", "java:S107"})
 	private Article(
 		Board board, String originId, String title, String content, Set<Link> links, Set<Tag> tags, int hits, int comments, int likes, int clicks,
 		boolean containsImage, boolean containsVideo, LocalDateTime createdAt, LocalDateTime collectedAt
