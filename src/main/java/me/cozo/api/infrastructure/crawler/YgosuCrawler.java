@@ -31,7 +31,7 @@ public class YgosuCrawler extends Crawler {
 				.originId(TextUtils.getFragment(attr(tr, "td.tit a", "href"), "/yeobgi/(\\d+)"))
 				.title(text(tr, "td.tit a"))
 				.hits(number(tr, "td.read"))
-				.comments(number(tr, "td.tit span strong"))
+				.comments(number(tr, "td.tit .reply_cnt"))
 				.likes(number(tr, "td.vote"))
 				.containsImage(false)
 				.containsVideo(false)
