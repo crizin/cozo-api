@@ -26,6 +26,7 @@ public class YgosuCrawler extends Crawler {
 	protected Set<Article> getArticles(Board board, Document document) {
 		return document.select("table.bd_list tbody tr:not(.notice)").stream()
 			.filter(tr -> !tr.select("td.tit").isEmpty())
+			.filter(tr -> tr.select("td.deny").isEmpty())
 			.map(tr -> Article.builder()
 				.board(board)
 				.originId(TextUtils.getFragment(attr(tr, "td.tit a", "href"), "/yeobgi/(\\d+)"))
