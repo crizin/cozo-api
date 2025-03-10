@@ -41,7 +41,7 @@ VALUES (8, 8, '엽기자랑', 'https://ygosu.com/board/yeobgi', 'https://m.ygosu
 		'https://ygosu.com/board/yeobgi/%s', 'https://m.ygosu.com/board/yeobgi/%s', 'me.cozo.api.infrastructure.crawler.YgosuCrawler', b'1');
 INSERT IGNORE INTO board
 VALUES (9, 9, '자유게시판', 'https://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard', 'https://m.ppomppu.co.kr/new/bbs_list.php?id=freeboard',
-		'https://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard&page=%s', 'https://www.ppomppu.co.kr/zboard/view.php?id=freeboard&no=%s',
+		'https://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard&page=%s', 'https://www.ppomppu.co.kr/zboard/zboard.php?id=freeboard&no=%s',
 		'https://m.ppomppu.co.kr/new/bbs_view.php?id=freeboard&no=%s', 'me.cozo.api.infrastructure.crawler.PpomppuCrawler', b'1');
 INSERT IGNORE INTO board
 VALUES (10, 10, '유머게시판', 'https://www.etoland.co.kr/bbs/board.php?bo_table=etohumor06', 'https://www.etoland.co.kr/plugin/mobile/board.php?bo_table=etohumor06',
