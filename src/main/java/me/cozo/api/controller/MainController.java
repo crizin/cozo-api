@@ -76,7 +76,7 @@ public class MainController {
 
 	@GetMapping("/boards")
 	public ResponseDto<List<BoardDto>> getBoards() {
-		return ResponseDto.success(boardRepository.findAllByActiveIsTrueOrderBySiteName().stream().map(BoardDto::of).toList());
+		return ResponseDto.success(boardRepository.findAllByOrderBySiteName().stream().map(BoardDto::of).toList());
 	}
 
 	@GetMapping("/links")

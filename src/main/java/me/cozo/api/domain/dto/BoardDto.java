@@ -9,7 +9,8 @@ public record BoardDto(
 	SiteDto site,
 	String name,
 	String mainUrlPc,
-	String mainUrlMobile
+	String mainUrlMobile,
+	boolean active
 ) implements Serializable {
 
 	public static BoardDto of(Board board) {
@@ -18,7 +19,8 @@ public record BoardDto(
 			SiteDto.of(board.getSite()),
 			board.getName(),
 			board.getMainUrlPc(),
-			board.getMainUrlMobile()
+			board.getMainUrlMobile(),
+			board.isActive()
 		);
 	}
 }
