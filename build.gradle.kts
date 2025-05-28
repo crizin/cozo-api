@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.4.2"
+	id("org.springframework.boot") version "3.5.0"
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -35,16 +35,16 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
-	implementation("net.javacrumbs.shedlock:shedlock-spring:6.2.0")
-	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.2.0")
-	implementation("org.apache.httpcomponents.client5:httpclient5:5.4.2")
-	implementation("org.apache.commons:commons-collections4:4.4")
+	implementation("net.javacrumbs.shedlock:shedlock-spring:6.7.0")
+	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.7.0")
+	implementation("org.apache.httpcomponents.client5:httpclient5:5.5")
+	implementation("org.apache.commons:commons-collections4:4.5.0")
 	implementation("org.apache.commons:commons-lang3:3.17.0")
-	implementation("org.apache.commons:commons-text:1.13.0")
-	implementation("com.google.guava:guava:33.4.0-jre")
+	implementation("org.apache.commons:commons-text:1.13.1")
+	implementation("com.google.guava:guava:33.4.8-jre")
 	implementation("org.reflections:reflections:0.10.2")
-	implementation("org.jsoup:jsoup:1.18.3")
-	implementation("org.yaml:snakeyaml:2.3")
+	implementation("org.jsoup:jsoup:1.20.1")
+	implementation("org.yaml:snakeyaml:2.4")
 	implementation(project(":webs"))
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.mysql:mysql-connector-j")

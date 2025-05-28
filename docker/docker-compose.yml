@@ -1,7 +1,7 @@
 services:
   mysql:
     container_name: cozo-mysql
-    image: mysql:9.0.0
+    image: mysql:9.3.0
     environment:
       MYSQL_DATABASE: cozo
       MYSQL_USER: cozo-user
@@ -14,7 +14,7 @@ services:
 
   redis:
     container_name: cozo-redis
-    image: redis:7.2.5
+    image: redis:8.0.1
     ports:
       - "6379:6379"
     expose:
