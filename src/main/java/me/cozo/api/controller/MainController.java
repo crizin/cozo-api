@@ -17,7 +17,7 @@ import me.cozo.api.domain.dto.TagTrendDto;
 import me.cozo.api.domain.repository.BoardRepository;
 import me.cozo.api.domain.repository.TagTrendRepository;
 import me.cozo.api.infrastructure.client.CaptchaClient;
-import me.cozo.api.infrastructure.client.SlackClient;
+import me.cozo.api.infrastructure.client.DiscordClient;
 import me.cozo.api.infrastructure.exception.http.NotFoundException;
 import me.cozo.api.mapper.ArticleQuery;
 import me.cozo.api.mapper.LinkQuery;
@@ -39,7 +39,7 @@ public class MainController {
 
 	private final CommandGateway commandGateway;
 	private final CaptchaClient captchaClient;
-	private final SlackClient slackClient;
+	private final DiscordClient discordClient;
 	private final ArticleQuery articleQuery;
 	private final LinkQuery linkQuery;
 	private final SearchQuery searchQuery;
@@ -115,7 +115,7 @@ public class MainController {
 			return ResponseDto.error("올바르지 않은 요청입니다");
 		}
 
-		if (slackClient.sendMessage(message)) {
+		if (discordClient.sendMessage(message)) {
 			return ResponseDto.success();
 		} else {
 			return ResponseDto.error("메시지 전송을 못했어요. 조금만 있다가 다시 해주세요.");

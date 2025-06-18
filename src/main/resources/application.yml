@@ -50,8 +50,8 @@ cozo:
   service-host: https://cozo.me
   youtube:
     api-key: ${YOUTUBE_API_KEY:}
-  slack:
-    url: ${SLACK_WEBHOOK_URL:}
+  discord:
+    url: ${DISCORD_WEBHOOK:}
   turnstile:
     url: https://challenges.cloudflare.com
     secret: ${TURNSTILE_SECRET:}

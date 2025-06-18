@@ -16,15 +16,15 @@ jobs:
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
     permissions:
       contents: read
       packages: write
     steps:
-      - name: Slack Notification
-        uses: act10ns/slack@v2
+      - name: Discord notification
+        uses: sarisia/actions-status-discord@v1.15.3
         with:
-          status: starting
+          title: 'Start building'
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -59,8 +59,8 @@ jobs:
       - name: Push Image
         run: docker push ${{ steps.meta.outputs.tags }}
 
-      - name: Slack Notification
-        uses: act10ns/slack@v2
+      - name: Discord notification
+        uses: sarisia/actions-status-discord@v1.15.3
         if: always()
         with:
           status: ${{ job.status }}
