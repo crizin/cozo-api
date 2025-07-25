@@ -27,7 +27,7 @@ public class ArticleTruncateScheduler {
 		log.info("Start truncate articles");
 
 		while (true) {
-			var articles = articleRepository.findAllByCreatedAtLessThan(LocalDateTime.now().minusYears(2), PageRequest.ofSize(100));
+			var articles = articleRepository.findAllByCreatedAtLessThan(LocalDateTime.now().minusYears(1), PageRequest.ofSize(100));
 
 			if (articles.isEmpty()) {
 				break;
