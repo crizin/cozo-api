@@ -44,7 +44,7 @@ Spring AI를 통해 MCP 서버를 제공한다
       "command": "npx",
       "args": [
         "@modelcontextprotocol/server-sse",
-        "https://cozo.me/sse"
+        "https://api.cozo.me/sse"
       ]
     }
   }
