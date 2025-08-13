@@ -28,13 +28,13 @@ public class McpTools {
 	private final TagTrendRepository tagTrendRepository;
 	private final SearchQuery searchQuery;
 
-	@Tool(description = "특정 날짜에 언급이 많이 된 인기 키워드와 각 키워드별 인기가 높은 게시글 조회")
-	public List<TagTrendDto> getTrendingKeywords(@ToolParam(required = false, description = "조회할 날짜. 생략하면 가장 최근의 키워드를 조회") LocalDate date) {
-		date = Optional.ofNullable(date).orElseGet(() -> tagTrendRepository.findLatestTagTrendDate().orElseGet(LocalDate::now));
+	@Tool(description = "cozo 인기 키워드 조회: 특정 날짜에 언급이 많이 된 인기 키워드와 각 키워드별 인기가 높은 게시글 조회")
+	public List<TagTrendDto> getTrendingKeywords(@ToolParam(required = false, description = "YYYY-MM-DD 형식의 조회 날짜. 생략하면 가장 최근의 키워드를 조회") String dateString) {
+		var date = Optional.ofNullable(dateString).map(LocalDate::parse).orElseGet(() -> tagTrendRepository.findLatestTagTrendDate().orElseGet(LocalDate::now));
 		return tagQuery.getTagTrends(date).item();
 	}
 
-	@Tool(description = "키워드로 커뮤니티 게시글 검색")
+	@Tool(description = "cozo 게시글 검색: 키워드로 커뮤니티 게시글 검색")
 	public PageDto<List<SimpleArticle>, Integer> searchArticles(@ToolParam String keyword, @ToolParam(description = "조회할 페이지 (1부터 시작)") int page) {
 		var result = searchQuery.search(keyword, Math.clamp(page, 1, 100), null);
 		var contents = result.item().contents();

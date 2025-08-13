@@ -1,8 +1,10 @@
 package me.cozo.api.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.domain.dto.ResponseDto;
 import me.cozo.api.infrastructure.exception.ServiceException;
+import org.apache.commons.lang3.Strings;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +41,7 @@ public class ExceptionHandlingController {
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ResponseDto<Void>> handle(Exception e) {
+	public ResponseEntity<?> handle(HttpServletRequest request, Exception e) {
 		var status = HttpStatus.INTERNAL_SERVER_ERROR;
 		var message = "잠시 후 다시 시도해주세요";
 
@@ -55,6 +57,10 @@ public class ExceptionHandlingController {
 			log.error(e.getMessage(), e);
 		} else {
 			log.debug(e.getMessage(), e);
+		}
+
+		if (Strings.CI.contains(request.getHeader("Accept"), "text/event-stream")) {
+			return ResponseEntity.status(status).body(message);
 		}
 
 		return new ResponseEntity<>(ResponseDto.error(message), status);
