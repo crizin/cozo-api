@@ -1,5 +1,6 @@
 package me.cozo.api.infrastructure.mcp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import me.cozo.api.domain.dto.ArticleDto;
 import me.cozo.api.domain.dto.BoardDto;
@@ -85,7 +86,10 @@ public class McpTools {
 		}
 	}
 
-	public record SimpleArticle(SimpleBoard board, String title, String excerpt, String url, SimpleExternalLink externalLink, LocalDateTime createdAt) {
+	public record SimpleArticle(
+		SimpleBoard board, String title, String excerpt, String url, SimpleExternalLink externalLink,
+		@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime createdAt
+	) {
 
 		public static SimpleArticle of(ArticleDto article, Map<Long, String> contents) {
 			return new SimpleArticle(
