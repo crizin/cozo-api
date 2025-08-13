@@ -40,7 +40,7 @@ Spring AI를 통해 MCP 서버를 제공한다
 {
   "mcpServers": {
     "cozo": {
-      "type": "http",
+      "type": "sse",
       "url": "https://api.cozo.me/mcp"
     }
   }
