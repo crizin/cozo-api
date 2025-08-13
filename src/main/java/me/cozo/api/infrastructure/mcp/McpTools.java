@@ -7,6 +7,7 @@ import me.cozo.api.domain.dto.LinkDto;
 import me.cozo.api.domain.dto.PageDto;
 import me.cozo.api.domain.dto.TagTrendDto;
 import me.cozo.api.domain.repository.TagTrendRepository;
+import me.cozo.api.mapper.LinkQuery;
 import me.cozo.api.mapper.SearchQuery;
 import me.cozo.api.mapper.TagQuery;
 import org.apache.commons.lang3.RegExUtils;
@@ -29,6 +30,7 @@ public class McpTools {
 
 	private final TagQuery tagQuery;
 	private final TagTrendRepository tagTrendRepository;
+	private final LinkQuery linkQuery;
 	private final SearchQuery searchQuery;
 
 	@Tool(description = "cozo 인기 키워드 조회: 특정 날짜에 언급이 많이 된 인기 키워드와 각 키워드별 인기가 높은 게시글 조회")
@@ -40,6 +42,16 @@ public class McpTools {
 			.map(LocalDate::parse)
 			.orElseGet(() -> tagTrendRepository.findLatestTagTrendDate().orElseGet(LocalDate::now));
 		return tagQuery.getTagTrends(date).item().stream().map(SimpleTrendingKeyword::of).toList();
+	}
+
+	@Tool(description = "cozo 링크 조회: 커뮤니티에서 최근에 공유된 외부 링크를 최신순으로 조회")
+	public PageDto<List<SimpleExternalLink>, Integer> getLinks(@ToolParam String keyword, @ToolParam(description = "조회할 페이지 (1부터 시작)") int page) {
+		var result = linkQuery.getLinks(page);
+		return new PageDto<>(
+			result.item().stream().map(SimpleExternalLink::of).toList(),
+			result.prevCursor(),
+			result.nextCursor()
+		);
 	}
 
 	@Tool(description = "cozo 게시글 검색: 키워드로 커뮤니티 게시글 검색")
@@ -87,11 +99,14 @@ public class McpTools {
 		}
 	}
 
-	public record SimpleExternalLink(String url, String title, String description) {
+	public record SimpleExternalLink(String url, String title, String description, List<SimpleArticle> articles) {
 
 		public static SimpleExternalLink of(LinkDto linkDto) {
 			return Optional.ofNullable(linkDto)
-				.map(link -> new SimpleExternalLink(link.url(), link.title(), link.description()))
+				.map(link -> new SimpleExternalLink(
+					link.url(), link.title(), link.description(),
+					link.articles().stream().map(article -> SimpleArticle.of(article, Collections.emptyMap())).toList()
+				))
 				.orElse(null);
 		}
 	}
