@@ -30,6 +30,32 @@ $ docker compose up -d
     - 필요한 Secrets
         - `DISCORD_WEBHOOK`: https://discord.com/api/webhooks/0000000000000000000/oooooooooooooo_ooooooooooooooooooooooooooooooooooooooooooooooooooooo
 
+## MCP (Model Context Protocol) 서버
+
+Spring AI를 통해 MCP 서버를 제공한다
+
+### MCP 서버 등록 방법
+
+```json
+{
+  "mcpServers": {
+    "cozo-mcp-server": {
+      "type": "http",
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-sse",
+        "https://cozo.me/sse"
+      ]
+    }
+  }
+}
+```
+
+### 제공되는 도구
+
+- **getTrendingKeywords**: 특정 날짜의 인기 키워드와 관련 게시글 조회
+- **searchArticles**: 키워드로 커뮤니티 게시글 검색
+
 ## 참고
 
 - [cozo-web / 웹 클라이언트](https://github.com/crizin/cozo-web)

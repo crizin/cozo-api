@@ -21,6 +21,10 @@ spring:
       - org.springframework.boot.autoconfigure.data.elasticsearch.ReactiveElasticsearchRepositoriesAutoConfiguration
   elasticsearch:
     uris: http://localhost:9200
+  ai:
+    mcp:
+      server:
+        name: cozo-mcp-server
 
 server:
   forward-headers-strategy: native

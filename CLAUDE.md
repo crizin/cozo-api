@@ -83,9 +83,21 @@ docker compose up -d
 
 - **Spring Integration**: 커맨드/이벤트 메시징 패턴
 - **Spring WebFlux**: 논블로킹 I/O를 위한 리액티브 프로그래밍
+- **Spring AI MCP Server**: AI 도구 통합을 위한 Model Context Protocol 서버
 - **Lombok**: 보일러플레이트 코드 감소 (getter, setter, builder)
 - **JSoup**: 웹 크롤링을 위한 HTML 파싱
 - **OpenAPI/Swagger**: API 문서 자동 생성
+
+### MCP (Model Context Protocol) 서버
+
+애플리케이션은 Spring AI를 통해 MCP 서버 기능을 제공합니다:
+
+- **설정**: `McpConfig`가 MCP 도구를 Spring Bean으로 등록
+- **도구 구현**: `McpTools`가 AI 모델이 사용할 수 있는 도구 제공
+  - `getTrendingKeywords`: 특정 날짜의 인기 키워드와 관련 게시글 조회
+  - `searchArticles`: 키워드로 커뮤니티 게시글 검색
+
+MCP 도구는 `@Tool` 어노테이션으로 정의되며, AI 모델이 직접 호출할 수 있는 메서드들을 제공합니다.
 
 ## 테스트 접근법
 
