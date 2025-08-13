@@ -39,13 +39,9 @@ Spring AI를 통해 MCP 서버를 제공한다
 ```json
 {
   "mcpServers": {
-    "cozo-mcp-server": {
+    "cozo": {
       "type": "http",
-      "command": "npx",
-      "args": [
-        "@modelcontextprotocol/server-sse",
-        "https://api.cozo.me/sse"
-      ]
+      "url": "https://api.cozo.me/mcp"
     }
   }
 }

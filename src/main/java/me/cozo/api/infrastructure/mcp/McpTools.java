@@ -34,7 +34,7 @@ public class McpTools {
 	private final LinkQuery linkQuery;
 	private final SearchQuery searchQuery;
 
-	@Tool(description = "cozo 인기 키워드 조회: 특정 날짜에 언급이 많이 된 인기 키워드와 각 키워드별 인기가 높은 게시글 조회")
+	@Tool(description = "cozo 인기 키워드 조회: 특정 날짜에 언급이 많이 된 인기 키워드 20개와 각 키워드별 인기가 높은 게시글 조회")
 	public List<SimpleTrendingKeyword> getTrendingKeywords(
 		@ToolParam(required = false, description = "YYYY-MM-DD 형식의 조회 날짜. 생략하면 가장 최근의 키워드를 조회") String dateString
 	) {
@@ -42,11 +42,11 @@ public class McpTools {
 			.map(StringUtils::stripToNull)
 			.map(LocalDate::parse)
 			.orElseGet(() -> tagTrendRepository.findLatestTagTrendDate().orElseGet(LocalDate::now));
-		return tagQuery.getTagTrends(date).item().stream().map(SimpleTrendingKeyword::of).toList();
+		return tagQuery.getTagTrends(date).item().stream().map(SimpleTrendingKeyword::of).limit(20).toList();
 	}
 
 	@Tool(description = "cozo 링크 조회: 커뮤니티에서 최근에 공유된 외부 링크를 최신순으로 조회")
-	public PageDto<List<SimpleExternalLink>, Integer> getLinks(@ToolParam String keyword, @ToolParam(description = "조회할 페이지 (1부터 시작)") int page) {
+	public PageDto<List<SimpleExternalLink>, Integer> getRecentLinks(@ToolParam String keyword, @ToolParam(description = "조회할 페이지 (1부터 시작)") int page) {
 		var result = linkQuery.getLinks(page);
 		return new PageDto<>(
 			result.item().stream().map(SimpleExternalLink::of).toList(),
