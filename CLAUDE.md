@@ -95,7 +95,7 @@ docker compose up -d
 - **설정**: `McpConfig`가 MCP 도구를 Spring Bean으로 등록
 - **도구 구현**: `McpTools`가 AI 모델이 사용할 수 있는 도구 제공
   - `getTrendingKeywords`: 특정 날짜의 인기 키워드와 관련 게시글 조회
-  - `getRecentLinks`: 커뮤니티에서 최근 공유된 링크 조회 
+  - `getRecentLinks`: 커뮤니티에서 최근 공유된 링크 조회
   - `searchArticles`: 키워드로 커뮤니티 게시글 검색
 
 MCP 도구는 `@Tool` 어노테이션으로 정의되며, AI 모델이 직접 호출할 수 있는 메서드들을 제공합니다.

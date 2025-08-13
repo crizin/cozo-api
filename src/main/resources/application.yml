@@ -25,7 +25,6 @@ spring:
     mcp:
       server:
         name: cozo
-        type: SYNC
         sse-endpoint: /mcp
         instructions: 커뮤니티 인기글을 수집해 모아보는 [cozo](https://cozo.me/) 사이트에 수집된 정보를 조회할 수 있다
 
