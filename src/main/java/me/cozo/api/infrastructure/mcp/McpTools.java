@@ -9,6 +9,7 @@ import me.cozo.api.domain.dto.TagTrendDto;
 import me.cozo.api.domain.repository.TagTrendRepository;
 import me.cozo.api.mapper.SearchQuery;
 import me.cozo.api.mapper.TagQuery;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,12 +32,14 @@ public class McpTools {
 	private final SearchQuery searchQuery;
 
 	@Tool(description = "cozo 인기 키워드 조회: 특정 날짜에 언급이 많이 된 인기 키워드와 각 키워드별 인기가 높은 게시글 조회")
-	public List<TagTrendDto> getTrendingKeywords(@ToolParam(required = false, description = "YYYY-MM-DD 형식의 조회 날짜. 생략하면 가장 최근의 키워드를 조회") String dateString) {
+	public List<SimpleTrendingKeyword> getTrendingKeywords(
+		@ToolParam(required = false, description = "YYYY-MM-DD 형식의 조회 날짜. 생략하면 가장 최근의 키워드를 조회") String dateString
+	) {
 		var date = Optional.ofNullable(dateString)
 			.map(StringUtils::stripToNull)
 			.map(LocalDate::parse)
 			.orElseGet(() -> tagTrendRepository.findLatestTagTrendDate().orElseGet(LocalDate::now));
-		return tagQuery.getTagTrends(date).item();
+		return tagQuery.getTagTrends(date).item().stream().map(SimpleTrendingKeyword::of).toList();
 	}
 
 	@Tool(description = "cozo 게시글 검색: 키워드로 커뮤니티 게시글 검색")
@@ -51,6 +55,17 @@ public class McpTools {
 		);
 	}
 
+	public record SimpleTrendingKeyword(int ranking, String keyword, List<SimpleArticle> articles) {
+
+		public static SimpleTrendingKeyword of(TagTrendDto tagTrend) {
+			return new SimpleTrendingKeyword(
+				tagTrend.ranking(),
+				tagTrend.tag(),
+				tagTrend.articles().stream().map(article -> SimpleArticle.of(article, Collections.emptyMap())).toList()
+			);
+		}
+	}
+
 	public record SimpleBoard(String siteName, String boardName) {
 
 		public static SimpleBoard of(BoardDto board) {
@@ -64,7 +79,7 @@ public class McpTools {
 			return new SimpleArticle(
 				SimpleBoard.of(article.board()),
 				article.title(),
-				contents.get(article.id()),
+				RegExUtils.removeAll(contents.get(article.id()), "@@/?HL@@"),
 				article.pcUrl(),
 				SimpleExternalLink.of(article.defaultLink()),
 				article.createdAt()
