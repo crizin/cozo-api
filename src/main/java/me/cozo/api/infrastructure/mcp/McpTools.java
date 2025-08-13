@@ -9,6 +9,7 @@ import me.cozo.api.domain.dto.TagTrendDto;
 import me.cozo.api.domain.repository.TagTrendRepository;
 import me.cozo.api.mapper.SearchQuery;
 import me.cozo.api.mapper.TagQuery;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,10 @@ public class McpTools {
 
 	@Tool(description = "cozo 인기 키워드 조회: 특정 날짜에 언급이 많이 된 인기 키워드와 각 키워드별 인기가 높은 게시글 조회")
 	public List<TagTrendDto> getTrendingKeywords(@ToolParam(required = false, description = "YYYY-MM-DD 형식의 조회 날짜. 생략하면 가장 최근의 키워드를 조회") String dateString) {
-		var date = Optional.ofNullable(dateString).map(LocalDate::parse).orElseGet(() -> tagTrendRepository.findLatestTagTrendDate().orElseGet(LocalDate::now));
+		var date = Optional.ofNullable(dateString)
+			.map(StringUtils::stripToNull)
+			.map(LocalDate::parse)
+			.orElseGet(() -> tagTrendRepository.findLatestTagTrendDate().orElseGet(LocalDate::now));
 		return tagQuery.getTagTrends(date).item();
 	}
 
