@@ -49,8 +49,9 @@ Spring AI를 통해 MCP 서버를 제공한다
 
 ### 제공되는 도구
 
-- **getTrendingKeywords**: 특정 날짜의 인기 키워드와 관련 게시글 조회
-- **searchArticles**: 키워드로 커뮤니티 게시글 검색
+- **getTrendingKeywords**: cozo 인기 키워드 조회: 특정 날짜에 언급이 많이 된 인기 키워드 20개와 각 키워드별 인기가 높은 게시글 조회
+- **getRecentLinks**: cozo 링크 조회: 커뮤니티에서 최근에 공유된 외부 링크를 최신순으로 조회
+- **searchArticles**: cozo 게시글 검색: 키워드로 커뮤니티 게시글 검색
 
 ## 참고
 
