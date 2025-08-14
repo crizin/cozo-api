@@ -11,7 +11,6 @@ import me.cozo.api.domain.repository.TagTrendRepository;
 import me.cozo.api.mapper.LinkQuery;
 import me.cozo.api.mapper.SearchQuery;
 import me.cozo.api.mapper.TagQuery;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.tool.annotation.Tool;
@@ -110,7 +109,7 @@ public class McpTools {
 			return Optional.ofNullable(linkDto)
 				.map(link -> new SimpleExternalLink(
 					link.url(), link.title(), link.description(),
-					CollectionUtils.emptyIfNull(link.articles()).stream().map(article -> SimpleArticle.of(article, Collections.emptyMap())).toList()
+					(link.articles() == null) ? null : link.articles().stream().map(article -> SimpleArticle.of(article, Collections.emptyMap())).toList()
 				))
 				.orElse(null);
 		}
