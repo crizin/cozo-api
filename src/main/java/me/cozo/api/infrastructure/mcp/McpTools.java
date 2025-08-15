@@ -79,7 +79,7 @@ public class McpTools {
 		}
 	}
 
-	public record SimpleBoard(String siteName, String boardName) {
+	public record SimpleBoard(String site, String board) {
 
 		public static SimpleBoard of(BoardDto board) {
 			return new SimpleBoard(board.site().name(), board.name());
