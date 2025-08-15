@@ -1,4 +1,4 @@
-FROM elasticsearch:9.0.4
+FROM elasticsearch:9.1.2
 
 RUN bin/elasticsearch-plugin install analysis-nori
 

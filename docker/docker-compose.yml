@@ -14,7 +14,7 @@ services:
 
   redis:
     container_name: cozo-redis
-    image: redis:8.0.1
+    image: redis:8.2.0
     ports:
       - "6379:6379"
     expose:
