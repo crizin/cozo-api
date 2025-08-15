@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.domain.repository.ArticleRepository;
 import me.cozo.api.domain.repository.BoardRepository;
-import me.cozo.api.infrastructure.client.DiscordClient;
+import me.cozo.api.infrastructure.client.SlackClient;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public class FreshnessCheckScheduler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger("freshness-check");
 
-	private final DiscordClient discordClient;
+	private final SlackClient slackClient;
 	private final ArticleRepository articleRepository;
 	private final BoardRepository boardRepository;
 
@@ -36,7 +36,7 @@ public class FreshnessCheckScheduler {
 				.ifPresent(article -> {
 					if (article.getCreatedAt().isBefore(limit)) {
 						LOGGER.info("Article is old - {}", article.getCreatedAt());
-						discordClient.sendMessage(
+						slackClient.sendMessage(
 							"Article is too old [site=%s, board=%s, written=%s]".formatted(board.getSite().getName(), board.getName(), article.getCreatedAt()));
 					} else {
 						LOGGER.info("Article is fresh - {}", article.getCreatedAt());

@@ -38,7 +38,7 @@ docker compose up -d
 - `REDIS_PASSWORD`
 - `ELASTICSEARCH_HOST`
 - `YOUTUBE_API_KEY`
-- `DISCORD_WEBHOOK`
+- `SLACK_WEBHOOK_URL`
 - `CLOUDFLARE_SITE_KEY`
 - `CLOUDFLARE_SECRET_KEY`
 
@@ -105,7 +105,7 @@ MCP 도구는 `@Tool` 어노테이션으로 정의되며, AI 모델이 직접 �
 현재 메인 애플리케이션에는 테스트 커버리지가 부족합니다. `webs` 서브프로젝트에는 HTTP 클라이언트 테스트가 포함되어 있습니다. 새로운 기능 추가 시:
 
 - 커맨드 핸들러를 위한 통합 테스트 작성
-- 외부 서비스(Discord, YouTube, 크롤링 대상 웹사이트) 모킹
+- 외부 서비스(Slack, YouTube, 크롤링 대상 웹사이트) 모킹
 - @DataJpaTest로 리포지토리 메서드 테스트
 - 테스트 컨테이너로 Elasticsearch 쿼리 검증
 
