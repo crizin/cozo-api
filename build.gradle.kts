@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.5.4"
+	id("org.springframework.boot") version "3.5.6"
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -9,7 +9,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(25)
 	}
 }
 
@@ -25,7 +25,7 @@ repositories {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.ai:spring-ai-bom:1.0.1")
+		mavenBom("org.springframework.ai:spring-ai-bom:1.0.2")
 	}
 }
 
@@ -41,17 +41,17 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
-	implementation("net.javacrumbs.shedlock:shedlock-spring:6.9.2")
-	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.9.2")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
+	implementation("net.javacrumbs.shedlock:shedlock-spring:6.10.0")
+	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.10.0")
 	implementation("org.apache.httpcomponents.client5:httpclient5:5.5")
 	implementation("org.apache.commons:commons-collections4:4.5.0")
-	implementation("org.apache.commons:commons-lang3:3.18.0")
-	implementation("org.apache.commons:commons-text:1.13.1")
-	implementation("com.google.guava:guava:33.4.8-jre")
+	implementation("org.apache.commons:commons-lang3:3.19.0")
+	implementation("org.apache.commons:commons-text:1.14.0")
+	implementation("com.google.guava:guava:33.5.0-jre")
 	implementation("org.reflections:reflections:0.10.2")
-	implementation("org.jsoup:jsoup:1.21.1")
-	implementation("org.yaml:snakeyaml:2.4")
+	implementation("org.jsoup:jsoup:1.21.2")
+	implementation("org.yaml:snakeyaml:2.5")
 	implementation(project(":webs"))
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.mysql:mysql-connector-j")
