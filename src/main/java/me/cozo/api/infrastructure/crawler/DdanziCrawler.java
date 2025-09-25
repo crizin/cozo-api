@@ -30,7 +30,7 @@ public class DdanziCrawler extends Crawler {
 			.map(tr -> Article.builder()
 				.board(board)
 				.originId(TextUtils.getFragment(attr(tr, "td.title a", "href"), "document_srl=(\\d+)"))
-				.title(textOnly(tr, "td.title a"))
+				.title(textOnly(tr, "td.title a:eq(0) span"))
 				.hits(number(tr, "td.readNum"))
 				.comments(number(tr, "td.title span.talk"))
 				.likes(number(tr, "voteNum"))
