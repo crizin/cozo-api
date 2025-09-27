@@ -20,5 +20,5 @@ public interface TagTrendRepository extends JpaRepository<TagTrend, TagTrendId> 
 
 	List<TagTrend> findAllByIdDateOrderByIdRanking(LocalDate date);
 
-	int deleteByIdDate(LocalDate date);
+	Integer deleteByIdDate(LocalDate date);
 }
