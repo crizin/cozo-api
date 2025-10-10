@@ -51,10 +51,11 @@ jobs:
           java-version: 25
           distribution: temurin
 
-      - name: Build Gradle
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
-        with:
-          arguments: bootBuildImage --scan --imageName=${{ steps.meta.outputs.tags }}
+
+      - name: Execute Gradle build
+        run: ./gradlew bootBuildImage --scan --imageName=${{ steps.meta.outputs.tags }}
 
       - name: Push Image
         run: docker push ${{ steps.meta.outputs.tags }}
