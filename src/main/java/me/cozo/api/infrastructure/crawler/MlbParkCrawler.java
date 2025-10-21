@@ -50,6 +50,7 @@ public class MlbParkCrawler extends Crawler {
 		}
 
 		return Optional.ofNullable(document.selectFirst("#contentDetail")).map(Element::html)
+			.map(html -> html.replaceAll("(?s)<div class=\"inner_article\">.*?</div>", ""))
 			.map(html -> html.replaceAll("(?s)<div class=\"tool_cont\">.*?</div>", ""));
 	}
 }
