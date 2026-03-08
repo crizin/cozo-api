@@ -6,7 +6,7 @@ import me.cozo.api.application.crawler.Crawler;
 import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.model.Board;
 import me.cozo.api.infrastructure.helper.TextUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -26,8 +26,8 @@ public class RuliwebCrawler extends Crawler {
 	@Override
 	protected Set<Article> getArticles(Board board, Document document) {
 		return document.select("table.board_list_table tbody tr").stream()
-			.filter(tr -> StringUtils.contains(tr.attr("class"), "blocktarget"))
-			.filter(tr -> StringUtils.equals(textOnly(tr, "td.divsn a"), "유머"))
+			.filter(tr -> Strings.CS.contains(tr.attr("class"), "blocktarget"))
+			.filter(tr -> Strings.CS.equals(textOnly(tr, "td.divsn a"), "유머"))
 			.map(tr -> Article.builder()
 				.board(board)
 				.originId(TextUtils.getFragment(attr(tr, "td.subject a.deco", "href"), "/read/(\\d+)"))

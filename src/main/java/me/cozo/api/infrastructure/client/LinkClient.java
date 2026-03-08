@@ -11,6 +11,7 @@ import me.cozo.api.infrastructure.helper.TextUtils;
 import net.crizin.webs.Browser;
 import net.crizin.webs.Webs;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,7 +46,7 @@ public class LinkClient {
 			.setReadTimeout(Duration.ofSeconds(30))
 			.simulateBrowser(Browser.FACEBOOK_EXTERNAL_HIT)
 			.registerObservation(observationRegistry)
-			.registerPreHook((context, request) -> {
+			.registerPreHook((_, request) -> {
 				try {
 					RateLimiterHelper.acquire(request.getUri().getHost());
 				} catch (URISyntaxException e) {
@@ -71,7 +72,7 @@ public class LinkClient {
 
 		response.getHeader("Content-Type")
 			.filter(header -> header.contains("text/html"))
-			.ifPresentOrElse(header -> {}, () -> {
+			.ifPresentOrElse(_ -> {}, () -> {
 				throw new HtmlParsingException("Content-Type is " + response.getHeader("Content-Type").orElse(null));
 			});
 
@@ -124,7 +125,7 @@ public class LinkClient {
 	}
 
 	public String resolveUrl(String baseUrl, String originalUrl) {
-		if (StringUtils.isBlank(originalUrl) || StringUtils.startsWithAny(originalUrl, "#", "data:", "javascript:")) {
+		if (StringUtils.isBlank(originalUrl) || Strings.CS.startsWithAny(originalUrl, "#", "data:", "javascript:")) {
 			return null;
 		}
 
@@ -151,7 +152,7 @@ public class LinkClient {
 			.filter(Objects::nonNull)
 			.map(element -> element.attr("href"))
 			.filter(StringUtils::isNotBlank)
-			.filter(href -> !StringUtils.startsWith(href, "data:"))
+			.filter(href -> !Strings.CS.startsWith(href, "data:"))
 			.findFirst()
 			.or(() -> {
 				try {

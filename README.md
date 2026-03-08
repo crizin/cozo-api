@@ -30,29 +30,6 @@ $ docker compose up -d
     - 필요한 Secrets
         - `SLACK_WEBHOOK_URL`: https://hooks.slack.com/services/ABCDEFGHI/JKLMNOPQRST/abcdefghijklmnOPQRSTU012
 
-## MCP (Model Context Protocol) 서버
-
-Spring AI를 통해 MCP 서버를 제공한다
-
-### MCP 서버 등록 방법
-
-```json
-{
-  "mcpServers": {
-    "cozo": {
-      "type": "sse",
-      "url": "https://api.cozo.me/mcp"
-    }
-  }
-}
-```
-
-### 제공되는 도구
-
-- **get_trending_keywords**: 특정 날짜에 커뮤니티에서 가장 많이 언급된 20개의 키워드와 각 키워드를 포함한 인기 게시글 조회
-- **get_recent_links**: 커뮤니티에서 최근에 공유된 외부 링크를 최신순으로 조회
-- **search_articles**: 키워드로 커뮤니티 최근 게시글 검색
-
 ## 참고
 
 - [cozo-web / 웹 클라이언트](https://github.com/crizin/cozo-web)

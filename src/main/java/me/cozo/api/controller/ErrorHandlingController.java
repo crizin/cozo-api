@@ -2,7 +2,7 @@ package me.cozo.api.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import me.cozo.api.domain.dto.ResponseDto;
-import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.boot.webmvc.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

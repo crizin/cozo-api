@@ -7,7 +7,7 @@ import me.cozo.api.application.crawler.Crawler;
 import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.model.Board;
 import me.cozo.api.infrastructure.helper.TextUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class MlbParkCrawler extends Crawler {
 	@Override
 	protected Set<Article> getArticles(Board board, Document document) {
 		return document.select("table.tbl_type01 tbody tr").stream()
-			.filter(tr -> !StringUtils.equalsAny(text(tr, "td:eq(0)"), "공지", "베팅"))
+			.filter(tr -> !Strings.CS.equalsAny(text(tr, "td:eq(0)"), "공지", "베팅"))
 			.map(tr -> Article.builder()
 				.board(board)
 				.originId(TextUtils.getFragment(attr(tr, "a.txt", "href"), "id=(\\d+)"))

@@ -1,17 +1,18 @@
 package me.cozo.api.infrastructure.client;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.domain.search.ArticleDocument;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.support.WebClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,24 +93,24 @@ public class SearchClient {
 
 		return tokens.stream()
 			.filter(this::acceptToken)
-			.map(token -> token.get("token").asText().toUpperCase().strip())
+			.map(token -> token.get("token").asString().toUpperCase().strip())
 			.collect(Collectors.toSet());
 	}
 
 	private boolean acceptToken(JsonNode token) {
-		var type = token.path("type").asText(null);
-		var pos = token.path("leftPOS").asText(null);
-		var word = StringUtils.deleteWhitespace(token.get("token").asText()).toUpperCase();
+		var type = token.path("type").asString(null);
+		var pos = token.path("leftPOS").asString(null);
+		var word = StringUtils.deleteWhitespace(token.get("token").asString()).toUpperCase();
 
-		if (StringUtils.equals(type, "SYNONYM")) {
+		if (Strings.CS.equals(type, "SYNONYM")) {
 			return false;
 		}
 
-		if (!(StringUtils.startsWith(pos, "N") || StringUtils.startsWithAny(pos, "SL", "SH"))) {
+		if (!(Strings.CS.startsWith(pos, "N") || Strings.CS.startsWithAny(pos, "SL", "SH"))) {
 			return false;
 		}
 
-		if (StringUtils.startsWithAny(pos, "NNB", "NR", "NP")) {
+		if (Strings.CS.startsWithAny(pos, "NNB", "NR", "NP")) {
 			return false;
 		}
 

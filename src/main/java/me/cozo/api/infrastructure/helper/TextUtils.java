@@ -3,6 +3,7 @@ package me.cozo.api.infrastructure.helper;
 import lombok.experimental.UtilityClass;
 import me.cozo.api.application.crawler.InvalidLinkException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -80,7 +81,7 @@ public class TextUtils {
 			if (host == null) {
 				throw new InvalidLinkException("Host must be not null [url=%s]".formatted(url));
 			}
-			return StringUtils.removeStart(StringUtils.removeStart(host, "m."), "www.");
+			return Strings.CS.removeStart(Strings.CS.removeStart(host, "m."), "www.");
 		} catch (URISyntaxException e) {
 			throw new InvalidLinkException("Host must be not null [url=%s]".formatted(url), e);
 		}

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.application.crawler.Crawler;
 import me.cozo.api.domain.model.Article;
 import me.cozo.api.domain.model.Board;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class TodayHumorCrawler extends Crawler {
 				.hits(number(tr, "td.hits"))
 				.comments(number(tr, "td.subject span.list_memo_count_span"))
 				.likes(number(tr, "td.oknok"))
-				.containsImage(tr.select("td.subject img").stream().anyMatch(el -> StringUtils.contains(el.attr("src"), "list_icon_photo.gif")))
+				.containsImage(tr.select("td.subject img").stream().anyMatch(el -> Strings.CS.contains(el.attr("src"), "list_icon_photo.gif")))
 				.containsVideo(false)
 				.createdAt(time(tr, "td.date"))
 				.build()

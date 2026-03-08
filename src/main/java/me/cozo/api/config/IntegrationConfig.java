@@ -1,5 +1,6 @@
 package me.cozo.api.config;
 
+import org.jspecify.annotations.NonNull;
 import org.reflections.Reflections;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -12,7 +13,6 @@ import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.ExecutorChannel;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.lang.NonNull;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class IntegrationConfig implements BeanDefinitionRegistryPostProcessor {
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) throws BeansException {
-		scanServiceActivators((parameterType, channelName) ->
+		scanServiceActivators((_, channelName) ->
 			registry.registerBeanDefinition(
 				channelName,
 				BeanDefinitionBuilder.genericBeanDefinition(ExecutorChannel.class)

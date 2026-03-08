@@ -29,7 +29,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(Environment environment, HttpSecurity httpSecurity) throws Exception {
+	public SecurityFilterChain filterChain(Environment environment, HttpSecurity httpSecurity) {
 		var isProduction = environment.acceptsProfiles(Profiles.of("production"));
 
 		httpSecurity

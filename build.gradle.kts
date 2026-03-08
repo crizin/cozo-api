@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.5.6"
+	id("org.springframework.boot") version "4.0.3"
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
@@ -23,12 +23,6 @@ repositories {
 	mavenCentral()
 }
 
-dependencyManagement {
-	imports {
-		mavenBom("org.springframework.ai:spring-ai-bom:1.0.2")
-	}
-}
-
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
@@ -36,22 +30,22 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 	implementation("org.springframework.boot:spring-boot-starter-integration")
+	implementation("org.springframework.retry:spring-retry:2.0.12")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	implementation("org.springframework.ai:spring-ai-starter-mcp-server-webmvc")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
-	implementation("net.javacrumbs.shedlock:shedlock-spring:6.10.0")
-	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.10.0")
-	implementation("org.apache.httpcomponents.client5:httpclient5:5.5")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
+	implementation("net.javacrumbs.shedlock:shedlock-spring:7.6.0")
+	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.6.0")
+	implementation("org.apache.httpcomponents.client5:httpclient5:5.6")
 	implementation("org.apache.commons:commons-collections4:4.5.0")
-	implementation("org.apache.commons:commons-lang3:3.19.0")
-	implementation("org.apache.commons:commons-text:1.14.0")
+	implementation("org.apache.commons:commons-lang3:3.20.0")
+	implementation("org.apache.commons:commons-text:1.15.0")
 	implementation("com.google.guava:guava:33.5.0-jre")
 	implementation("org.reflections:reflections:0.10.2")
-	implementation("org.jsoup:jsoup:1.21.2")
-	implementation("org.yaml:snakeyaml:2.5")
+	implementation("org.jsoup:jsoup:1.22.1")
+	implementation("org.yaml:snakeyaml:2.6")
 	implementation(project(":webs"))
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.mysql:mysql-connector-j")
