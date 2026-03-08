@@ -39,6 +39,8 @@ dependencies {
 	implementation("net.javacrumbs.shedlock:shedlock-spring:7.6.0")
 	implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.6.0")
 	implementation("org.apache.httpcomponents.client5:httpclient5:5.6")
+	implementation("org.apache.httpcomponents.core5:httpcore5:5.4.2")
+	implementation("org.apache.httpcomponents.core5:httpcore5-h2:5.4.2")
 	implementation("org.apache.commons:commons-collections4:4.5.0")
 	implementation("org.apache.commons:commons-lang3:3.20.0")
 	implementation("org.apache.commons:commons-text:1.15.0")
