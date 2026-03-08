@@ -1,11 +1,12 @@
 package me.cozo.api.infrastructure.client;
 
 import io.micrometer.common.util.StringUtils;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.crizin.webs.Webs;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Slf4j
 @Component

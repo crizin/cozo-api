@@ -1,6 +1,5 @@
 package me.cozo.api.application.scheduler;
 
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.cozo.api.domain.model.Board;
@@ -14,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import java.time.LocalDate;
 
 @Slf4j
 @Component
