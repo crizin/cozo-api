@@ -25,7 +25,7 @@ public class PpomppuCrawler extends Crawler {
 
 	@Override
 	protected Set<Article> getArticles(Board board, Document document) {
-		return document.select("#revolution_main_table tbody tr[class=baseList]").stream()
+		return document.select("#revolution_main_table tbody tr.baseList").stream()
 			.filter(tr -> !tr.html().contains("해당글은 운영자에 의해 블라인드 처리된 글입니다."))
 			.map(tr -> Article.builder()
 				.board(board)
