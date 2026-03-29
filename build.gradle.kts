@@ -34,6 +34,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
+	implementation("org.springframework.boot:spring-boot-opentelemetry")
 	implementation("org.springframework.retry:spring-retry:2.0.12")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
 	implementation("net.javacrumbs.shedlock:shedlock-spring:7.6.0")
@@ -51,6 +52,6 @@ dependencies {
 	implementation(project(":webs"))
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.mysql:mysql-connector-j")
-	runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+	implementation("io.micrometer:micrometer-registry-otlp")
 	annotationProcessor("org.projectlombok:lombok")
 }

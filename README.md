@@ -23,6 +23,13 @@ $ docker compose up -d
 - `SLACK_WEBHOOK_URL`: Slack webhook URL
 - `TURNSTILE_SECRET`: [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile/) secret
 - `YOUTUBE_API_KEY`: YouTube API key
+- `OTLP_METRICS_ENABLED`: OTLP metrics export 활성화 여부 (`true` / `false`)
+- `OTLP_METRICS_URL`: Grafana Cloud OTLP metrics endpoint 전체 경로 (예: `https://.../otlp/v1/metrics`)
+- `OTLP_AUTH_HEADER`: Grafana Cloud OTLP 인증 헤더 값 (예: `Basic ...`)
+- `OTLP_METRICS_STEP`: 메트릭 export 주기 (기본값 `1m`)
+- `OTLP_SERVICE_NAME`: OTLP `service.name` 리소스 속성 (기본값 `cozo-api`)
+- `OTLP_SERVICE_NAMESPACE`: OTLP `service.namespace` 리소스 속성 (기본값 `cozo`)
+- `OTLP_DEPLOYMENT_ENVIRONMENT`: OTLP `deployment.environment` 리소스 속성 (기본값 `SPRING_PROFILES_ACTIVE` 값)
 
 ## GitHub Action
 

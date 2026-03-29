@@ -33,13 +33,26 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, prometheus
+        include: health
+  opentelemetry:
+    resource-attributes:
+      service.name: ${OTLP_SERVICE_NAME:cozo-api}
+      service.namespace: ${OTLP_SERVICE_NAMESPACE:cozo}
+      deployment.environment: ${OTLP_DEPLOYMENT_ENVIRONMENT:${SPRING_PROFILES_ACTIVE:default}}
   metrics:
     distribution:
       percentiles-histogram:
         http.server.requests: true
       percentiles:
         http.server.requests: 0.5, 0.9, 0.99
+  otlp:
+    metrics:
+      export:
+        enabled: ${OTLP_METRICS_ENABLED:false}
+        url: ${OTLP_METRICS_URL:}
+        step: ${OTLP_METRICS_STEP:1m}
+        headers:
+          Authorization: ${OTLP_AUTH_HEADER:}
 
 springdoc:
   api-docs:
